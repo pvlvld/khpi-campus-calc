@@ -133,11 +133,11 @@ class Calculator {
   }
 
   /**
-   * @param {string} value
+   * @param {string | number} value
    * @returns {string}
    */
   updateDisplay(value) {
-    return (this.ui.display.innerHTML = value);
+    return (this.ui.display.innerHTML = "" + value);
   }
 
   /**
