@@ -34,3 +34,11 @@ body {
         font-size: 1rem;
     }
 }
+
+#calculator {
+    display: flex;
+    width: 100%;
+    & #main {
+        width: 80%;
+    }
+}
