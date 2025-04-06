@@ -23,7 +23,14 @@ body {
 }
 
 #display {
-    width: 80vh;
-    height: 5vw;
+    width: 100%;
     background-color: #1F1F1F;
+    font-size: 3.5rem;
+    font-weight: bold;
+    text-align: right;
+    & #display-expression {
+        color: grey;
+        font-weight: 400;
+        font-size: 1rem;
+    }
 }
