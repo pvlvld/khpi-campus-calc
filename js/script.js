@@ -19,6 +19,7 @@ const REPLACEMENTS = {
   "√": "sqrt",
   π: "PI",
   ",": ".",
+  "×": "*",
 };
 
 const VALID_EXPRESSION_REGEX = new RegExp(
