@@ -31,6 +31,11 @@ const VALID_EXPRESSION_REGEX = new RegExp(
 class Calculator {
   constructor(name = "race00_vpavlenko_dmykhailov") {
     this.currentInput = "";
+    /**
+     * @type {"standart" | "scientific" | "volume" |
+     * "length" | "weight" | "temperature" | "area"}
+     */
+    this.cutrrentLayout = "standart";
     this.name = name;
     this.ui = {
       display: /** @type {HTMLElement} */ (document.getElementById("display")),
