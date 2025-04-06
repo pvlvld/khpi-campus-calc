@@ -139,6 +139,9 @@ class Calculator {
     return (this.ui.display.innerHTML = value);
   }
 
+  /**
+   * @param {string} expression
+   */
   prepareExpression(expression) {
     for (const [key, value] of Object.entries(REPLACEMENTS)) {
       expression = expression.replace(new RegExp(key, "g"), value);
@@ -146,10 +149,17 @@ class Calculator {
     return expression;
   }
 
+  /**
+   * @param {string} expression
+   */
   validateExpression(expression) {
     return VALID_EXPRESSION_REGEX.test(expression);
   }
 
+  /**
+   * @returns {number}
+   * @throws {Error} if expression is invalid
+   */
   calculateExpression() {
     if (!this.validateExpression(this.ui.display.innerHTML)) {
       throw new Error("Invalid expression");
