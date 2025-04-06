@@ -1,0 +1,29 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: white;
+}
+
+body {
+    background: #202020;
+    margin: 20px 4px 4px 4px;
+}
+
+.btn {
+    background-color: #747475;
+}
+
+.btn:hover {
+    background-color: #353535;
+}
+
+.btn:active {
+    background-color: #494949;
+}
+
+#display {
+    width: 80vh;
+    height: 5vw;
+    background-color: #1F1F1F;
+}
