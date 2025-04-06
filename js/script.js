@@ -100,6 +100,7 @@ class Calculator {
   }
 
   appendHistoryItem(item) {
+    // JSON representation locally or plain HTML string?
     const data = {history: this.ui.history.innerHTML};
     localStorage.setItem(this.name, JSON.stringify(data));
   }
