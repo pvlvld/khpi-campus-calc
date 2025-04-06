@@ -75,9 +75,8 @@ class Calculator {
 
   init() {
     document.addEventListener("paste", (event) => {
-      this.ui.display.innerHTML = event.clipboardData
-        .getData("text")
-        .replace(/,/g, ".");
+      const data = event.clipboardData?.getData("text").replace(/,/g, ".");
+      if (this.validateExpression(data)) this.ui.display.innerHTML = data;
     });
 
     document.addEventListener("keydown", (e) => {
