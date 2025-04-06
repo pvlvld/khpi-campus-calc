@@ -1,31 +1,28 @@
-const SPECIAL_FUNCTIONS = {
-  "√": (x) => Math.sqrt(x),
-  sin: (x) => Math.sin(x),
-  asin: (x) => Math.asin(x),
-  cos: (x) => Math.cos(x),
-  acos: (x) => Math.acos(x),
-  tan: (x) => Math.tan(x),
-  atan: (x) => Math.atan(x),
-  log: (x) => Math.log(x),
-  pow: (x, y) => Math.pow(x, y),
-  π: () => Math.PI,
-  e: () => Math.E,
-  "!": (x) => {
-    let result = 1;
-    for (let i = 1; i <= Math.abs(x); i++) {
-      result *= i;
-    }
-    return result;
-  },
-  exp: (x) => Math.exp(x),
+const SPECIAL_FUNCTIONS = [
+  "√",
+  "sqrt",
+  "π",
+  "PI",
+  "sin",
+  "asin",
+  "cos",
+  "acos",
+  "tan",
+  "atan",
+  "log",
+  "pow",
+  "e",
+  "!",
+];
+
+const REPLACEMENTS = {
+  "√": "sqrt",
+  π: "PI",
+  ",": ".",
 };
 
-const functionNames = Object.keys(SPECIAL_FUNCTIONS)
-  .map((fn) => fn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-  .join("|");
-
 const VALID_EXPRESSION_REGEX = new RegExp(
-  `^([+\\-*/^(),!]|(?:\\d+(?:\\.\\d+)?|\\.\\d+)|${functionNames})+$`
+  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${SPECIAL_FUNCTIONS.join("|")})+$`
 );
 
 class Calculator {
@@ -75,7 +72,7 @@ class Calculator {
 
   init() {
     document.addEventListener("paste", (event) => {
-      const data = event.clipboardData?.getData("text").replace(/,/g, ".");
+      const data = event.clipboardData?.getData("text");
       if (this.validateExpression(data)) this.ui.display.innerHTML = data;
     });
 
@@ -142,6 +139,13 @@ class Calculator {
     return (this.ui.display.innerHTML = value);
   }
 
+  prepareExpression(expression) {
+    for (const [key, value] of Object.entries(REPLACEMENTS)) {
+      expression = expression.replace(new RegExp(key, "g"), value);
+    }
+    return expression;
+  }
+
   validateExpression(expression) {
     return VALID_EXPRESSION_REGEX.test(expression);
   }
@@ -150,7 +154,7 @@ class Calculator {
     if (!this.validateExpression(this.ui.display.innerHTML)) {
       throw new Error("Invalid expression");
     }
-    return math.evaluate(this.ui.display.innerHTML);
+    return math.evaluate(this.prepareExpression(this.ui.display.innerHTML));
   }
 
   historyItemClickHandler(e) {
