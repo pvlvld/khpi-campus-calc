@@ -42,3 +42,18 @@ body {
         width: 80%;
     }
 }
+
+#keyboard-standart {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 1px;
+
+    & .btn {
+        height: 9vh;
+        line-height: 9vh;
+        font-size: 2rem;
+        font-weight: bold;
+        text-align: center;
+    }
+}
