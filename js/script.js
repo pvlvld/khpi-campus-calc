@@ -41,7 +41,7 @@ class Calculator {
     this.ui = {
       display: /** @type {HTMLElement} */ (document.getElementById("display")),
       history: /** @type {HTMLElement} */ (document.getElementById("history")),
-      buttons: document.querySelectorAll("button"),
+      buttons: document.querySelectorAll(".btn"),
 
       templates: {
         historyItem: document.createElement("div"),
