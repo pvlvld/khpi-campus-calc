@@ -189,4 +189,4 @@ class Calculator {
   }
 }
 
-new Calculator().init();
+const app = new Calculator().init();
