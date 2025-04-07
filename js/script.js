@@ -110,6 +110,44 @@ class Calculator {
           break;
       }
     });
+
+    // TODO:
+    this.ui.buttons.forEach((button) => {
+      button.addEventListener("click", (e) => {
+        this.handleButtonClick(e);
+      });
+    });
+  }
+
+  handleButtonClick(e) {
+    const value = e.target.innerText;
+    switch (true) {
+      case value === "=":
+        try {
+          const result = this.calculateExpression();
+          this.appendHistoryItem({
+            equasion: this.ui.display.innerHTML,
+            result: result,
+          });
+          this.updateDisplay(result);
+        } catch (error) {
+          console.error(error);
+        }
+        break;
+      case value === "C":
+        this.clearDisplay();
+        break;
+      case value === "CE":
+        this.clearDisplay();
+        break;
+      case /^[0-9]$/.test(value):
+        this.currentInput += value;
+        this.ui.display.innerHTML = this.currentInput;
+        break;
+      default:
+        console.error(`Unhandled button click: ${value}`);
+        break;
+    }
   }
 
   appendHistoryItem(item) {
