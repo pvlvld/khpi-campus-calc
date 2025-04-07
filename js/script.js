@@ -14,7 +14,7 @@ const FUNCTIONS = [
   "e",
   "!",
   "%",
-  "÷",
+  "÷"
 ];
 
 const REPLACEMENTS = {
@@ -22,7 +22,7 @@ const REPLACEMENTS = {
   π: "PI",
   ",": ".",
   "×": "*",
-  "÷": "/",
+  "÷": "/"
 };
 
 const VALID_EXPRESSION_REGEX = new RegExp(
@@ -47,22 +47,22 @@ class Calculator {
         ),
         result: /** @type {HTMLElement} */ (
           document.getElementById("display-input-result")
-        ),
+        )
       },
       history: /** @type {HTMLElement} */ (document.getElementById("history")),
       buttons: document.querySelectorAll(".btn"),
 
       templates: {
-        historyItem: document.createElement("div"),
-      },
+        historyItem: document.createElement("div")
+      }
     };
     this.clipboard = {
       user: navigator.clipboard,
       local: "",
       permissions: {
         read: false,
-        write: false,
-      },
+        write: false
+      }
     };
     this.clipboard.user
       .readText()
@@ -127,7 +127,7 @@ class Calculator {
           const result = this.calculateExpression();
           this.appendHistoryItem({
             equasion: this.ui.display.innerHTML,
-            result: result,
+            result: result
           });
           this.updateDisplay(result);
         } catch (error) {
@@ -218,7 +218,9 @@ class Calculator {
       throw new Error("Invalid expression");
     }
     //@ts-expect-error
-    return math.evaluate(this.prepareExpression(this.ui.display.innerHTML));
+    return math.evaluate(
+      this.prepareExpression(this.ui.display.expression.innerHTML)
+    );
   }
 
   historyItemClickHandler(e) {
