@@ -151,7 +151,7 @@ class Calculator {
    * @returns {string}
    */
   updateDisplay(value) {
-    return (this.ui.display.innerHTML = "" + value);
+    return (this.ui.display.result.innerHTML = "" + value);
   }
 
   /**
