@@ -1,4 +1,4 @@
-const SPECIAL_FUNCTIONS = [
+const FUNCTIONS = [
   "√",
   "sqrt",
   "π",
@@ -26,7 +26,9 @@ const REPLACEMENTS = {
 };
 
 const VALID_EXPRESSION_REGEX = new RegExp(
-  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${SPECIAL_FUNCTIONS.join("|")})+$`
+  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${FUNCTIONS.join(
+    "|"
+  )})+$`
 );
 
 class Calculator {
