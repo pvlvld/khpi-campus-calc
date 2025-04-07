@@ -39,7 +39,14 @@ class Calculator {
     this.cutrrentLayout = "standart";
     this.name = name;
     this.ui = {
-      display: /** @type {HTMLElement} */ (document.getElementById("display")),
+      display: {
+        expression: /** @type {HTMLElement} */ (
+          document.getElementById("display-expression")
+        ),
+        result: /** @type {HTMLElement} */ (
+          document.getElementById("display-input-result")
+        ),
+      },
       history: /** @type {HTMLElement} */ (document.getElementById("history")),
       buttons: document.querySelectorAll(".btn"),
 
@@ -132,7 +139,8 @@ class Calculator {
   }
 
   clearDisplay() {
-    this.ui.display.innerHTML = "";
+    this.ui.display.expression.innerHTML = "";
+    this.ui.display.result.innerHTML = "";
     this.currentInput = "";
   }
 
