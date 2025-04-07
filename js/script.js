@@ -86,7 +86,7 @@ class Calculator {
   init() {
     document.addEventListener("paste", (event) => {
       const data = event.clipboardData?.getData("text");
-      if (this.validateExpression(data)) this.ui.display.innerHTML = data;
+      if (data && this.validateExpr(data)) this.ui.display.innerHTML = data;
     });
 
     document.addEventListener("keydown", (e) => {
@@ -205,7 +205,7 @@ class Calculator {
   /**
    * @param {string} expression
    */
-  validateExpression(expression) {
+  validateExpr(expression) {
     return VALID_EXPRESSION_REGEX.test(expression);
   }
 
@@ -214,7 +214,7 @@ class Calculator {
    * @throws {Error} if expression is invalid
    */
   calculateExpression() {
-    if (!this.validateExpression(this.ui.display.innerHTML)) {
+    if (!this.validateExpr(this.ui.display.innerHTML)) {
       throw new Error("Invalid expression");
     }
     return math.evaluate(this.prepareExpression(this.ui.display.innerHTML));
