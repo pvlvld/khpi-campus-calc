@@ -13,6 +13,8 @@ const SPECIAL_FUNCTIONS = [
   "pow",
   "e",
   "!",
+  "%",
+  "÷",
 ];
 
 const REPLACEMENTS = {
@@ -20,6 +22,7 @@ const REPLACEMENTS = {
   π: "PI",
   ",": ".",
   "×": "*",
+  "÷": "/",
 };
 
 const VALID_EXPRESSION_REGEX = new RegExp(
