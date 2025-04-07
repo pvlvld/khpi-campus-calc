@@ -217,6 +217,7 @@ class Calculator {
     if (!this.validateExpr(this.ui.display.innerHTML)) {
       throw new Error("Invalid expression");
     }
+    //@ts-expect-error
     return math.evaluate(this.prepareExpression(this.ui.display.innerHTML));
   }
 
