@@ -233,4 +233,8 @@ class Calculator {
   }
 }
 
+class Converter {
+  //
+}
+
 const app = new Calculator().init();
