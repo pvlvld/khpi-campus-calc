@@ -125,7 +125,7 @@ class Calculator {
         try {
           const result = this.calculateExpression();
           this.appendHistoryItem({
-            equasion: this.ui.display.innerHTML,
+            equasion: this.ui.display.innerHTML + "=",
             result: result
           });
           this.updateDisplay(result);
