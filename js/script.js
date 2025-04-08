@@ -33,7 +33,6 @@ const VALID_EXPRESSION_REGEX = new RegExp(
 
 class Calculator {
   constructor(name = "race00_vpavlenko_dmykhailov") {
-    this.currentInput = "";
     /**
      * @type {"Standart" | "Scientific" | "Programmer"}
      */
@@ -81,7 +80,7 @@ class Calculator {
       switch (true) {
         case e.key === "Enter":
           e.preventDefault();
-          console.log(this.updateDisplay(this.calculateExpression()));
+          this.updateDisplay(undefined, this.calculateExpression());
           break;
         case e.ctrlKey && e.key === "A":
         case e.ctrlKey && e.key === "a":
@@ -136,10 +135,10 @@ class Calculator {
         try {
           const result = this.calculateExpression();
           this.appendHistoryItem({
-            equasion: this.ui.display.innerHTML + "=",
+            expression: this.ui.display.innerHTML + "=",
             result: result
           });
-          this.updateDisplay(result);
+          this.updateDisplay(undefined, result);
         } catch (error) {
           console.error(error);
         }
@@ -151,7 +150,7 @@ class Calculator {
         this.clearDisplay();
         break;
       case /^[0-9]$/.test(value):
-        this.ui.display.result.innerHTML = this.currentInput += value;
+        this.ui.display.result.innerHTML += value;
         break;
       default:
         console.error(`Unhandled button click: ${value}`);
@@ -166,14 +165,15 @@ class Calculator {
   }
 
   /**
-   * @param {{equasion: string, result: string}} data
+   * @param {string} expression
+   * @param {string | number} result
    * @returns {Node}
    */
-  generateHistoryItem(data) {
+  generateHistoryItem(expression, result) {
     const item = this.ui.templates.historyItem.cloneNode();
-    item.classList.add("calculator-history-item");
-    item.appendChild(document.createElement("div")).innerHTML = data.equasion;
-    item.appendChild(document.createElement("span")).innerHTML = data.result;
+    item.classList.add("history-item");
+    item.appendChild(document.createElement("div")).innerHTML = expression;
+    item.appendChild(document.createElement("span")).innerHTML = "" + result;
     return item;
   }
 
@@ -189,16 +189,17 @@ class Calculator {
 
   clearDisplay() {
     this.ui.display.expression.innerHTML = "";
-    this.ui.display.result.innerHTML = "";
-    this.currentInput = "";
+    this.ui.display.result.innerHTML = "0";
   }
 
   /**
-   * @param {string | number} value
-   * @returns {string}
+   * @param {string} expression
+   * @param {string | number} result
    */
-  updateDisplay(value) {
-    return (this.ui.display.result.innerHTML = "" + value);
+  updateDisplay(expression = "0", result = "") {
+    this.ui.display.result.innerHTML = "" + result;
+    this.ui.display.expression.innerHTML = expression;
+    return {expression, result};
   }
 
   /**
