@@ -4,6 +4,9 @@
   box-sizing: border-box;
   color: white;
   font-family: "Segoe UI", Arial, sans-serif;
+  --color-primary: #747475;
+  --color-secondary: #353535;
+  --color-tertiary: #494949;
 }
 
 body {
@@ -14,16 +17,16 @@ body {
 }
 
 .btn {
-  background-color: #747475;
+  background-color: var(--color-primary);
   height: 600px;
 }
 
 .btn:hover {
-  background-color: #353535;
+  background-color: var(--color-secondary);
 }
 
 .btn:active {
-  background-color: #494949;
+  background-color: var(--color-tertiary);
 }
 
 #display {
@@ -75,15 +78,19 @@ body {
 }
 
 #hist-mem-content {
-    text-align: right;
+  text-align: right;
 }
 
 #hist-mem-title {
-    display: flex;
-    & * {
-        margin: 0 20px;
-        font-size: 1rem;
-        font-weight: bold;
-        cursor: pointer;
-    }
+  display: flex;
+  & * {
+    margin: 0 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+}
+
+.hist-mem-item:hover {
+  background-color: var(--color-secondary);
 }
