@@ -118,6 +118,11 @@ class Calculator {
     });
   }
 
+  changeLayout() {
+    this.clearDisplay();
+    // TODO:
+  }
+
   handleButtonClick(e) {
     const value = e.target.innerText;
     switch (true) {
