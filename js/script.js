@@ -35,9 +35,9 @@ class Calculator {
   constructor(name = "race00_vpavlenko_dmykhailov") {
     this.currentInput = "";
     /**
-     * @type {"standart" | "scientific" | "programmer"}
+     * @type {"Standart" | "Scientific" | "Programmer"}
      */
-    this.cutrrentLayout = "standart";
+    this.cutrrentLayout = "Standart";
     this.name = name;
     this.ui = {
       display: {
