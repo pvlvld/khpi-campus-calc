@@ -145,8 +145,7 @@ class Calculator {
         this.clearDisplay();
         break;
       case /^[0-9]$/.test(value):
-        this.currentInput += value;
-        this.ui.display.innerHTML = this.currentInput;
+        this.ui.display.result.innerHTML = this.currentInput += value;
         break;
       default:
         console.error(`Unhandled button click: ${value}`);
