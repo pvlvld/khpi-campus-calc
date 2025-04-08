@@ -63,23 +63,8 @@ class Calculator {
         write: false
       }
     };
-    this.clipboard.user
-      .readText()
-      .then((text) => {
-        this.clipboard.local = text;
-        this.clipboard.permissions.read = true;
-      })
-      .catch((err) => {
-        console.error("Failed to read clipboard contents: ", err);
-      });
-    this.clipboard.user
-      .writeText(this.clipboard.local)
-      .then(() => {
-        this.clipboard.permissions.write = true;
-      })
-      .catch((err) => {
-        console.error("Failed to write clipboard contents: ", err);
-      });
+
+    this.requestClipboardPermissions();
   }
 
   init() {
@@ -116,6 +101,27 @@ class Calculator {
         this.handleButtonClick(e);
       });
     });
+  }
+
+  requestClipboardPermissions() {
+    console.log("here");
+    this.clipboard.user
+      .readText()
+      .then((text) => {
+        this.clipboard.local = text;
+        this.clipboard.permissions.read = true;
+      })
+      .catch((err) => {
+        console.error("Failed to read clipboard contents: ", err);
+      });
+    this.clipboard.user
+      .writeText(this.clipboard.local)
+      .then(() => {
+        this.clipboard.permissions.write = true;
+      })
+      .catch((err) => {
+        console.error("Failed to write clipboard contents: ", err);
+      });
   }
 
   changeLayout() {
