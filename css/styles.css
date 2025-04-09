@@ -7,6 +7,9 @@
   --color-primary: #747475;
   --color-secondary: #353535;
   --color-tertiary: #494949;
+  --color-accent: #0077D7;
+  --color-font: #FFFFFF;
+  --color-inactive-font: #A5A5A5;
 }
 
 body {
