@@ -1,14 +1,22 @@
+// https://github.com/microsoft/calculator/raw/refs/heads/main/src/Calculator/Assets/CalculatorIcons.ttf
+// Icons Font
+
 const DEBUG = true;
 
 const FUNCTIONS = ["√", "^", "!", "%", "\\/", "\\*"];
-const REPLACEMENTS = { ",": "." };
+const REPLACEMENTS = {",": "."};
 
 const VALID_EXPRESSION_REGEX = new RegExp(
-  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${FUNCTIONS.join("|")})+$`
+  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${FUNCTIONS.join(
+    "|"
+  )})+$`
 );
 
 class Calculator {
   constructor(name = "race00_vpavlenko_dmykhailov") {
+    /**
+     * @type {"Standart" | "Scientific" | "Programmer"}
+     */
     this.cutrrentLayout = "Standart";
     this.eval = new MathExpressionParser().evaluate;
     this.currentInput = "";
@@ -16,25 +24,30 @@ class Calculator {
     this.memory = 0;
     this.ui = {
       display: {
-        expression: document.getElementById("display-expression"),
-        resultInput: document.getElementById("display-input-result")
+        expression: /** @type {HTMLElement} */ (
+          document.getElementById("display-expression")
+        ),
+        resultInput: /** @type {HTMLElement} */ (
+          document.getElementById("display-input-result")
+        )
       },
-      history: document.getElementById("history-content"),
+      history: /** @type {HTMLElement} */ (
+        document.getElementById("history-content")
+      ),
       buttons: document.querySelectorAll(".btn"),
       templates: {
         historyItem: document.createElement("div")
-      }
+      },
+      memory: /** @type {HTMLElement} */ (
+        document.getElementById("memory-content")
+      )
     };
     this.ui.templates.historyItem.classList.add("history-item");
-
-    this.memoryUI = {
-      container: document.getElementById("memory-content")
-    };
 
     this.clipboard = {
       user: navigator.clipboard,
       local: "",
-      permissions: { read: false, write: false }
+      permissions: {read: false, write: false}
     };
 
     this.overwriteInput = false;
@@ -68,22 +81,27 @@ class Calculator {
       button.addEventListener("click", (e) => this.handleButtonClick(e));
     });
 
-    document.querySelectorAll(".memory-control").forEach(btn => {
-      btn.addEventListener("click", () => this.handleMemoryControl(btn.innerText));
+    document.querySelectorAll(".memory-control").forEach((btn) => {
+      btn.addEventListener("click", () =>
+        //@ts-expect-error
+        this.handleMemoryControl(btn.innerText)
+      );
     });
   }
 
   requestClipboardPermissions() {
-    this.clipboard.user.readText()
-      .then(text => {
+    this.clipboard.user
+      .readText()
+      .then((text) => {
         this.clipboard.local = text;
         this.clipboard.permissions.read = true;
       })
-      .catch(err => console.error("Failed to read clipboard: ", err));
+      .catch((err) => console.error("Failed to read clipboard: ", err));
 
-    this.clipboard.user.writeText(this.clipboard.local)
-      .then(() => this.clipboard.permissions.write = true)
-      .catch(err => console.error("Failed to write clipboard: ", err));
+    this.clipboard.user
+      .writeText(this.clipboard.local)
+      .then(() => (this.clipboard.permissions.write = true))
+      .catch((err) => console.error("Failed to write clipboard: ", err));
   }
 
   handleButtonClick(e) {
@@ -139,11 +157,15 @@ class Calculator {
 
       case value === "1/x":
         try {
-          const currentValue = parseFloat(this.ui.display.resultInput.innerHTML);
+          const currentValue = parseFloat(
+            this.ui.display.resultInput.innerHTML
+          );
           if (currentValue === 0) {
             this.ui.display.resultInput.innerHTML = "Cannot divide by 0";
           } else {
-            const lastNumberMatch = this.currentInput.match(/(-?\d+(\.\d+)?)(?!.*\d)/);
+            const lastNumberMatch = this.currentInput.match(
+              /(-?\d+(\.\d+)?)(?!.*\d)/
+            );
             if (lastNumberMatch) {
               const number = lastNumberMatch[0];
               const index = this.currentInput.lastIndexOf(number);
@@ -174,13 +196,15 @@ class Calculator {
     if (!lastNumberMatch || !lastNumberMatch.index) return;
 
     const lastNumber = lastNumberMatch[1];
-    const startIndex = lastNumberMatch.index + lastNumberMatch[0].lastIndexOf(lastNumber);
+    const startIndex =
+      lastNumberMatch.index + lastNumberMatch[0].lastIndexOf(lastNumber);
     const charBefore = this.currentInput[startIndex - 1];
     if (charBefore && /[!%√]/.test(charBefore)) return;
 
     let updatedInput = "";
     if (lastNumber.startsWith("-")) {
-      updatedInput = this.currentInput.slice(0, startIndex) + lastNumber.slice(1);
+      updatedInput =
+        this.currentInput.slice(0, startIndex) + lastNumber.slice(1);
     } else {
       updatedInput = this.currentInput.slice(0, startIndex) + "-" + lastNumber;
     }
@@ -193,9 +217,9 @@ class Calculator {
     if (this.currentInput.length === 0) {
       this.currentInput = operator === "√" ? operator : "0" + operator;
     } else {
-      const lastChar = this.currentInput.at(-1);
+      const lastChar = this.currentInput.at(-1) || "0";
 
-      if (/[\d)]/.test(lastChar) || (operator === "√")) {
+      if (/[\d)]/.test(lastChar) || operator === "√") {
         this.currentInput += operator;
       } else {
         // заміни тільки якщо останній символ — оператор
@@ -208,12 +232,16 @@ class Calculator {
     this.ui.display.resultInput.innerHTML = this.currentInput;
   }
 
-
   appendHistoryItem(item) {
     const historyItem = this.generateHistoryItem(item.expression, item.result);
     this.ui.history.appendChild(historyItem);
   }
 
+  /**
+   * @param {string} expression
+   * @param {string | number} result
+   * @returns {Node}
+   */
   generateHistoryItem(expression, result) {
     const item = this.ui.templates.historyItem.cloneNode();
     item.appendChild(document.createElement("div")).innerHTML = expression;
@@ -221,13 +249,21 @@ class Calculator {
     item.addEventListener("click", this.historyItemClickHandler.bind(this));
     return item;
   }
-
+  /**
+   * @param {string | undefined} expression
+   * @param {string | number | undefined} result
+   */
   updateDisplay(expression = undefined, result = undefined) {
-    if (result !== undefined) this.ui.display.resultInput.innerHTML = "" + result;
-    if (expression !== undefined) this.ui.display.expression.innerHTML = expression;
-    return { expression, result };
+    if (result !== undefined)
+      this.ui.display.resultInput.innerHTML = "" + result;
+    if (expression !== undefined)
+      this.ui.display.expression.innerHTML = expression;
+    return {expression, result};
   }
 
+  /**
+   * @param {string} expression
+   */
   prepareExpression(expression) {
     for (const [key, value] of Object.entries(REPLACEMENTS)) {
       expression = expression.replace(new RegExp(key, "g"), value);
@@ -235,6 +271,9 @@ class Calculator {
     return expression;
   }
 
+  /**
+   * @param {string} expression
+   */
   validateExpr = (expression) => VALID_EXPRESSION_REGEX.test(expression);
 
   clearDisplay() {
@@ -264,18 +303,23 @@ class Calculator {
     return result;
   }
 
+  /**
+   * @param {"M+" | "M-" | "MC" | "MR" | "MS"} action
+   * @param {HTMLElement | null} targetItem
+   */
   handleMemoryControl(action, targetItem = null) {
     const currentValue = parseFloat(this.ui.display.resultInput.innerHTML);
 
     if (targetItem) {
       const span = targetItem.querySelector("span");
-      let value = parseFloat(span.textContent);
+      if (!span) throw new Error("Memory item span not found");
+      let value = parseFloat(span.textContent || "0");
 
       switch (action) {
         case "M+":
           value += currentValue;
           break;
-        case "M−":
+        case "M-":
           value -= currentValue;
           break;
         case "MC":
@@ -283,27 +327,29 @@ class Calculator {
           return;
       }
 
-      span.textContent = value;
+      span.textContent = String(value);
       return;
     }
 
-    const items = this.memoryUI.container.querySelectorAll(".memory-item");
+    const items = this.ui.memory.querySelectorAll(".memory-item");
     let lastItem = items[0];
 
     // 🧩 Додаємо: якщо нема памʼяті, створити 0
-    if ((action === "M+" || action === "M−") && !lastItem) {
+    if ((action === "M+" || action === "M-") && !lastItem) {
       this.appendMemoryItem(0);
-      lastItem = this.memoryUI.container.querySelector(".memory-item");
+      //@ts-expect-error enough
+      lastItem = this.ui.memory.querySelector(".memory-item");
     }
 
     switch (action) {
       case "MC":
-        this.memoryUI.container.innerHTML = "";
+        this.ui.memory.innerHTML = "";
         break;
 
       case "MR":
         if (lastItem) {
-          const val = lastItem.querySelector("span").textContent;
+          const val = lastItem.querySelector("span")?.textContent;
+          if (!val) throw new Error("Memory item span not found");
           this.currentInput = val;
           this.ui.display.resultInput.innerHTML = val;
           this.overwriteInput = true;
@@ -315,17 +361,18 @@ class Calculator {
         break;
 
       case "M+":
-      case "M−":
+      case "M-":
         if (lastItem) {
           const span = lastItem.querySelector("span");
-          let oldValue = parseFloat(span.textContent);
-          const newValue = action === "M+" ? oldValue + currentValue : oldValue - currentValue;
-          span.textContent = newValue;
+          if (!span) throw new Error("Memory item span not found");
+          let oldValue = parseFloat(span.textContent || "0");
+          const newValue =
+            action === "M+" ? oldValue + currentValue : oldValue - currentValue;
+          span.textContent = String(newValue);
         }
         break;
     }
   }
-
 
   appendMemoryItem(value) {
     const item = document.createElement("div");
@@ -343,7 +390,7 @@ class Calculator {
 
     const btnMinus = document.createElement("button");
     btnMinus.textContent = "M−";
-    btnMinus.onclick = () => this.handleMemoryControl("M−", item);
+    btnMinus.onclick = () => this.handleMemoryControl("M-", item);
 
     const btnClear = document.createElement("button");
     btnClear.textContent = "MC";
@@ -356,10 +403,8 @@ class Calculator {
     item.appendChild(labelSpan);
     item.appendChild(controlls);
 
-    this.memoryUI.container.prepend(item);
+    this.ui.memory.prepend(item);
   }
-
-
 }
 
 class MathExpressionParser {
@@ -375,21 +420,42 @@ class MathExpressionParser {
     };
   }
 
+  /**
+   * @param {number} left
+   * @param {string} operator
+   * @param {number} right
+   */
   performOperation(left, operator, right) {
     switch (operator) {
-      case "+": return left + right;
-      case "-": return left - right;
-      case "*": return left * right;
-      case "/": return left / right;
-      case "^": return Math.pow(left, right);
-      case "!": return this.factorial(left);
-      case "√": return Math.sqrt(right);
-      default: throw new Error(`Unhandled operator: ${operator}`);
+      case "+":
+        return left + right;
+      case "-":
+        return left - right;
+      case "*":
+        return left * right;
+      case "/":
+        return left / right;
+      case "^":
+        return Math.pow(left, right);
+      case "!":
+        return this.factorial(left);
+      case "√":
+        return Math.sqrt(right);
+      default:
+        throw new Error(`Unhandled operator: ${operator}`);
     }
   }
 
+  /**
+   * @param {string} exp
+   * @returns {number}
+   */
   evaluate = (exp) => this.parseExp(exp.replace(/\s+/g, ""));
 
+  /**
+   * @param {string} exp
+   * @returns {number}
+   */
   parseExp(exp) {
     if (!exp) return 0;
     exp = this.handleParentheses(exp);
@@ -400,9 +466,10 @@ class MathExpressionParser {
       return parseFloat(exp.slice(0, -1)) / 100;
     }
 
-    const { operator, index } = this.findLowestPriorityOperator(exp);
+    const {operator, index} = this.findLowestPriorityOperator(exp);
     if (!operator) {
-      if (exp.endsWith("!")) return this.factorial(this.parseExp(exp.slice(0, -1)));
+      if (exp.endsWith("!"))
+        return this.factorial(this.parseExp(exp.slice(0, -1)));
       return parseFloat(exp);
     }
 
@@ -416,24 +483,38 @@ class MathExpressionParser {
     if (rightExp.endsWith("%")) {
       const percentValue = parseFloat(rightExp.slice(0, -1)) / 100;
       switch (operator) {
-        case "+": return leftValue + leftValue * percentValue;
-        case "-": return leftValue - leftValue * percentValue;
-        case "*": return leftValue * percentValue;
-        case "/": return leftValue / percentValue;
-        default: return this.performOperation(leftValue, operator, percentValue);
+        case "+":
+          return leftValue + leftValue * percentValue;
+        case "-":
+          return leftValue - leftValue * percentValue;
+        case "*":
+          return leftValue * percentValue;
+        case "/":
+          return leftValue / percentValue;
+        default:
+          return this.performOperation(leftValue, operator, percentValue);
       }
     }
 
     return this.performOperation(leftValue, operator, this.parseExp(rightExp));
   }
 
+  /**
+   * @param {string} exp
+   * @returns {boolean}
+   */
   hasOperator(exp) {
-    return Object.keys(this.priority).some(op => exp.includes(op));
+    return Object.keys(this.priority).some((op) => exp.includes(op));
   }
 
+  /**
+   * @param {string} exp
+   * @returns {string}
+   */
   handleParentheses(exp) {
     if (!exp.includes("(")) return exp;
-    let depth = 0, startIndex = -1;
+    let depth = 0,
+      startIndex = -1;
     for (let i = 0; i < exp.length; i++) {
       if (exp[i] === "(") {
         if (depth === 0) startIndex = i;
@@ -450,15 +531,28 @@ class MathExpressionParser {
     return exp;
   }
 
+  /**
+   * @param {string} exp
+   * @returns {{operator: string | null, index: number}}
+   */
   findLowestPriorityOperator(exp) {
-    let lowest = Infinity, index = -1, op = null, depth = 0;
+    let lowest = Infinity,
+      index = -1,
+      op = null,
+      depth = 0;
     for (let i = exp.length - 1; i >= 0; i--) {
       const char = exp[i];
       if (char === ")") depth++;
       else if (char === "(") depth--;
       if (depth === 0 && this.priority[char] !== undefined) {
         if (char === "%" && i === exp.length - 1) continue;
-        if (char === "-" && (i === 0 || this.priority[exp[i - 1]] !== undefined || exp[i - 1] === "(")) continue;
+        if (
+          char === "-" &&
+          (i === 0 ||
+            this.priority[exp[i - 1]] !== undefined ||
+            exp[i - 1] === "(")
+        )
+          continue;
         if (char === "!" && i === exp.length - 1) continue;
         if (char === "√" && i === 0) continue;
         if (this.priority[char] <= lowest) {
@@ -468,9 +562,13 @@ class MathExpressionParser {
         }
       }
     }
-    return { operator: op, index };
+    return {operator: op, index};
   }
 
+  /**
+   * @param {number} n
+   * @returns {number}
+   */
   factorial(n) {
     if (!Number.isInteger(n)) throw new Error("TODO: FLOAT FACTORIAL ERROR");
     if (n === 0 || n === 1) return 1;
@@ -482,8 +580,12 @@ class MathExpressionParser {
 
 // === Вкладки (історія/пам’ять)
 function switchTab(tab) {
-  const hist = document.getElementById("history-content");
-  const mem = document.getElementById("memory-content");
+  const hist = /** @type {HTMLElement} */ (
+    document.getElementById("history-content")
+  );
+  const mem = /** @type {HTMLElement} */ (
+    document.getElementById("memory-content")
+  );
   if (tab === "history") {
     hist.style.display = "block";
     mem.style.display = "none";
@@ -498,43 +600,46 @@ const app = new Calculator();
 app.init();
 
 // === Бургер
-document.getElementById("sidebar-toggle").addEventListener("click", () => {
+document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
   const sidebar = document.getElementById("sidebar");
-  sidebar.classList.toggle("active");
+  sidebar?.classList.toggle("active");
 
   // На десктопі — розширяємо трохи вправо
   if (window.innerWidth > 768) {
-    if (sidebar.classList.contains("active")) {
+    if (sidebar?.classList.contains("active")) {
       sidebar.style.width = "10rem";
     } else {
-      sidebar.style.width = "3rem";
+      sidebar ? (sidebar.style.width = "3rem") : null;
     }
   }
 });
 
 // === Journal (адаптивно)
-document.getElementById("open-journal").addEventListener("click", (e) => {
+document.getElementById("open-journal")?.addEventListener("click", (e) => {
   e.stopPropagation();
   const histMem = document.getElementById("hist-mem");
   const isMobile = window.innerWidth <= 768;
 
   if (isMobile) {
-    histMem.classList.toggle("active");
+    histMem?.classList.toggle("active");
   } else {
     switchTab("history");
   }
 });
 
 // === Memory Slider (Mv)
-document.getElementById("toggle-memory-slider").addEventListener("click", () => {
-  const slider = document.getElementById("memory-slider");
-  if (slider.style.display === "block") {
-    slider.style.display = "none";
-  } else {
-    slider.innerText = "Memory: " + (app.memory || 0);
-    slider.style.display = "block";
-  }
-});
+document
+  .getElementById("toggle-memory-slider")
+  ?.addEventListener("click", () => {
+    const slider = document.getElementById("memory-slider");
+    if (!slider) throw new Error("Memory slider not found");
+    if (slider.style.display === "block") {
+      slider.style.display = "none";
+    } else {
+      slider.innerText = "Memory: " + (app.memory || 0);
+      slider.style.display = "block";
+    }
+  });
 
 // === Закриття слайдера поза ним (моб)
 document.addEventListener("click", (e) => {
@@ -544,9 +649,9 @@ document.addEventListener("click", (e) => {
 
   if (
     isMobile &&
-    histMem.classList.contains("active") &&
+    histMem?.classList.contains("active") &&
     !histMem.contains(e.target) &&
-    !sidebar.contains(e.target)
+    !sidebar?.contains(e.target)
   ) {
     histMem.classList.remove("active");
   }
