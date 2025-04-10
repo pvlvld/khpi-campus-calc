@@ -42,13 +42,14 @@ class Calculator {
           document.getElementById("display-input-result")
         )
       },
-      history: /** @type {HTMLElement} */ (document.getElementById("history")),
+      history: /** @type {HTMLElement} */ (document.getElementById("history-content")),
       buttons: document.querySelectorAll(".btn"),
 
       templates: {
         historyItem: document.createElement("div")
       }
     };
+    this.ui.templates.historyItem.classList.add("history-item");
     this.clipboard = {
       user: navigator.clipboard,
       local: "",
@@ -127,7 +128,7 @@ class Calculator {
         try {
           const result = this.calculateExpression();
           this.appendHistoryItem({
-            expression: this.ui.display.innerHTML + "=",
+            expression: this.ui.display.expression.innerHTML,
             result: result
           });
           this.updateDisplay(undefined, result);
@@ -174,6 +175,11 @@ class Calculator {
     // JSON representation locally or plain HTML string?
     // const data = {history: this.ui.history.innerHTML};
     // localStorage.setItem(this.name, JSON.stringify(data));
+    const historyItem = this.generateHistoryItem(
+      item.expression,
+      item.result
+    );
+    this.ui.history.appendChild(historyItem);
   }
 
   /**
@@ -210,10 +216,8 @@ class Calculator {
    */
   generateHistoryItem(expression, result) {
     const item = this.ui.templates.historyItem.cloneNode();
-    //@ts-expect-error
-    item.classList.add("history-item");
     item.appendChild(document.createElement("div")).innerHTML = expression;
-    item.appendChild(document.createElement("span")).innerHTML = "" + result;
+    item.appendChild(document.createElement("div")).innerHTML = "" + result;
 
     return item;
   }
