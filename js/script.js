@@ -255,7 +255,6 @@ class MathExpressionParser {
       "-": 1,
       "*": 2,
       "/": 2,
-      "%": 2,
       "^": 3,
       "!": 4,
       "√": 4
@@ -277,8 +276,6 @@ class MathExpressionParser {
         return left * right;
       case "/":
         return left / right;
-      case "%":
-        return left % right;
       case "^":
         return Math.pow(left, right);
       case "!":
@@ -310,6 +307,7 @@ class MathExpressionParser {
     if (exp.startsWith("√")) return Math.sqrt(this.parseExp(exp.slice(1)));
 
     const {operator, index} = this.findLowestPriorityOperator(exp);
+
     if (!operator) {
       if (exp.endsWith("!")) {
         return this.factorial(this.parseExp(exp.slice(0, exp.length - 1)));
@@ -322,11 +320,38 @@ class MathExpressionParser {
 
     if (operator === "√") return Math.sqrt(this.parseExp(rightExp));
 
-    return this.performOperation(
-      this.parseExp(leftExp),
-      operator,
-      this.parseExp(rightExp)
-    );
+    const leftValue = this.parseExp(leftExp);
+
+    if (rightExp.endsWith("%")) {
+      const percentValue =
+        parseFloat(rightExp.slice(0, rightExp.length - 1)) / 100;
+
+      switch (operator) {
+        case "+":
+          return leftValue + leftValue * percentValue;
+        case "-":
+          return leftValue - leftValue * percentValue;
+        case "*":
+          return leftValue * percentValue;
+        case "/":
+          return leftValue / percentValue;
+        default:
+          return this.performOperation(leftValue, operator, percentValue);
+      }
+    }
+
+    return this.performOperation(leftValue, operator, this.parseExp(rightExp));
+  }
+
+  /**
+   * @param {string} exp
+   * @returns {boolean}
+   */
+  hasOperator(exp) {
+    for (const op of Object.keys(this.priority)) {
+      if (exp.includes(op)) return true;
+    }
+    return false;
   }
 
   /**
@@ -378,6 +403,9 @@ class MathExpressionParser {
 
       if (depth === 0) {
         if (this.priority[char] !== undefined) {
+          // Skip % since handled separately
+          if (char === "%" && i === exp.length - 1) continue;
+
           // Unary minus case
           if (
             char === "-" &&
