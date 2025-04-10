@@ -130,13 +130,16 @@ class Calculator {
           if (currentValue === 0) {
             this.ui.display.resultInput.innerHTML = "Cannot divide by 0";
           } else {
-            const result = 1 / currentValue;
-            this.appendHistoryItem({
-              expression: `1/(${currentValue})`,
-              result
-            });
-            this.updateDisplay(`1/(${currentValue})`, result);
-            this.currentInput = "" + result;
+            const lastNumberMatch = this.currentInput.match(/(-?\d+(\.\d+)?)(?!.*\d)/);
+            if (lastNumberMatch) {
+              const number = lastNumberMatch[0];
+              const index = this.currentInput.lastIndexOf(number);
+              const before = this.currentInput.slice(0, index);
+              const after = this.currentInput.slice(index + number.length);
+
+              this.currentInput = `${before}(1/(${number}))${after}`;
+              this.ui.display.resultInput.innerHTML = this.currentInput;
+            }
           }
         } catch (e) {
           console.error("Invalid 1/x operation", e);
@@ -176,14 +179,22 @@ class Calculator {
   handleAlgebraicButtonClick(operator) {
     if (this.currentInput.length === 0) {
       this.currentInput = operator === "√" ? operator : "0" + operator;
-    } else if (!isNaN(+(this.currentInput.at(-1) || NaN)) || operator === "√") {
-      this.currentInput += operator;
     } else {
-      this.currentInput = this.currentInput.slice(0, -1) + operator;
+      const lastChar = this.currentInput.at(-1);
+
+      if (/[\d)]/.test(lastChar) || (operator === "√")) {
+        this.currentInput += operator;
+      } else {
+        // заміни тільки якщо останній символ — оператор
+        if (/[\+\-\*\/\^%√!]/.test(lastChar)) {
+          this.currentInput = this.currentInput.slice(0, -1) + operator;
+        }
+      }
     }
 
     this.ui.display.resultInput.innerHTML = this.currentInput;
   }
+
 
   appendHistoryItem(item) {
     const historyItem = this.generateHistoryItem(item.expression, item.result);
@@ -242,41 +253,62 @@ class Calculator {
 
   handleMemoryControl(action) {
     const currentValue = parseFloat(this.ui.display.resultInput.innerHTML);
+    const items = this.memoryUI.container.querySelectorAll(".memory-item");
+    const lastItem = items[items.length - 1];
+
     switch (action) {
       case "MC":
-        this.memory = 0;
         this.memoryUI.container.innerHTML = "";
         break;
+
       case "MR":
-        this.currentInput = "" + this.memory;
-        this.ui.display.resultInput.innerHTML = this.currentInput;
+        if (lastItem) {
+          const val = lastItem.querySelector("span").textContent;
+          this.currentInput = val;
+          this.ui.display.resultInput.innerHTML = val;
+        }
         break;
+
       case "MS":
-        this.memory = currentValue;
-        this.renderMemory();
+        this.appendMemoryItem("MS", currentValue);
         break;
+
       case "M+":
-        this.memory += currentValue;
-        this.renderMemory();
-        break;
       case "M−":
-        this.memory -= currentValue;
-        this.renderMemory();
+        if (lastItem) {
+          const span = lastItem.querySelector("span");
+          const oldValue = parseFloat(span.textContent);
+          const newValue = action === "M+" ? oldValue + currentValue : oldValue - currentValue;
+
+          span.textContent = newValue;
+          lastItem.querySelector("div").textContent = `${action} ${currentValue}`;
+        }
         break;
     }
   }
 
-  renderMemory() {
-    this.memoryUI.container.innerHTML = "";
+  appendMemoryItem(label, result) {
     const item = document.createElement("div");
     item.classList.add("memory-item");
-    item.innerHTML = `
-      <span>${this.memory}</span>
-      <div class="memory-item-controlls">
-        <button onclick="app.handleMemoryControl('M+')">M+</button>
-        <button onclick="app.handleMemoryControl('M−')">M−</button>
-        <button onclick="app.handleMemoryControl('MC')">MC</button>
-      </div>`;
+
+    const labelDiv = document.createElement("div");
+    labelDiv.textContent = label;
+
+    const resultSpan = document.createElement("span");
+    resultSpan.textContent = result;
+
+    const controlls = document.createElement("div");
+    controlls.className = "memory-item-controlls";
+    controlls.innerHTML = `
+    <button onclick="app.handleMemoryControl('M+')">M+</button>
+    <button onclick="app.handleMemoryControl('M−')">M−</button>
+    <button onclick="app.handleMemoryControl('MC')">MC</button>
+  `;
+
+    item.appendChild(labelDiv);
+    item.appendChild(resultSpan);
+    item.appendChild(controlls);
+
     this.memoryUI.container.appendChild(item);
   }
 }
