@@ -92,18 +92,14 @@ class Calculator {
     switch (true) {
       case value === "=":
         try {
+          if (this.overwriteInput) {
+            this.currentInput = value;
+          }
           const result = this.calculateExpression();
           this.appendHistoryItem({
             expression: this.ui.display.expression.innerHTML,
             result: result
           });
-          if (this.overwriteInput) {
-            this.currentInput = value;
-            this.overwriteInput = false;
-          } else {
-            this.currentInput += value;
-          }
-          this.ui.display.resultInput.innerHTML = this.currentInput;
           this.updateDisplay(undefined, result);
         } catch (error) {
           console.error(error);
@@ -114,11 +110,7 @@ class Calculator {
       case value === "CE":
         if (this.overwriteInput) {
           this.currentInput = value;
-          this.overwriteInput = false;
-        } else {
-          this.currentInput += value;
         }
-        this.ui.display.resultInput.innerHTML = this.currentInput;
         this.clearDisplay();
         break;
 
