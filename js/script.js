@@ -153,6 +153,39 @@ class Calculator {
       case ["+", "-", "*", "/", "!", "%", "^", ".", "√"].includes(value):
         this.handleAlgebraicButtonClick(value);
         break;
+
+      case value === "±":
+        if (this.currentInput.length === 0) return;
+
+        const lastNumberMatch = this.currentInput.match(
+          /(?:^|[+\-*/^%])\s*(-?\d+(\.\d+)?)(?=\s*$)/
+        );
+        if (!lastNumberMatch || !lastNumberMatch.index) return;
+
+        const lastNumber = lastNumberMatch[1];
+        if (DEBUG){
+          console.log(
+            `Last number match: ${lastNumberMatch}\nLast number: ${lastNumber}`)
+        }
+
+        const startIndex =
+          lastNumberMatch.index + lastNumberMatch[0].lastIndexOf(lastNumber);
+        const charBefore = this.currentInput[startIndex - 1];
+        if (charBefore && /[!%√]/.test(charBefore)) return;
+
+        let updatedInput = "";
+        if (lastNumber.startsWith("-")) {
+          updatedInput =
+            this.currentInput.slice(0, startIndex) + lastNumber.slice(1);
+        } else {
+          updatedInput =
+            this.currentInput.slice(0, startIndex) + "-" + lastNumber;
+        }
+
+        this.currentInput = updatedInput;
+        this.ui.display.resultInput.innerHTML = this.currentInput;
+        break;
+
       default:
         console.error(`Unhandled button click: ${value}`);
         break;
