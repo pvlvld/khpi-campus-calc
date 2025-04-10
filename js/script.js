@@ -169,9 +169,8 @@ class Calculator {
         if (!lastNumberMatch || !lastNumberMatch.index) return;
 
         const lastNumber = lastNumberMatch[1];
-        if (DEBUG){
-          console.log(
-            `Last number match: ${lastNumberMatch}\nLast number: ${lastNumber}`)
+        if (DEBUG) {
+          console.log(`Last number match: ${lastNumberMatch}`);
         }
 
         const startIndex =
