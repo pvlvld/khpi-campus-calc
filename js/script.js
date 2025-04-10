@@ -1,5 +1,7 @@
 // https://github.com/microsoft/calculator/raw/refs/heads/main/src/Calculator/Assets/CalculatorIcons.ttf
 // Icons Font
+const DEBUG = false;
+
 const FUNCTIONS = [
   "√",
   // TODO:
@@ -246,8 +248,11 @@ class Calculator {
     const expr = this.prepareExpression(this.currentInput);
     this.ui.display.expression.innerHTML = expr + "=";
     this.currentInput = "";
-
-    return this.eval(expr);
+    const result = this.eval(expr);
+    if (DEBUG) {
+      console.log(`Expression: ${expr}, Result: ${result}`);
+    }
+    return result;
   }
 }
 
