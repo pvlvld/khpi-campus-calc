@@ -150,7 +150,7 @@ class Calculator {
       case /^[0-9]$/.test(value):
         this.ui.display.resultInput.innerHTML = this.currentInput += value;
         break;
-      case ["+", "-", "*", "/", "!", "%", "^", "."].includes(value):
+      case ["+", "-", "*", "/", "!", "%", "^", ".", "√"].includes(value):
         this.handleAlgebraicButtonClick(value);
         break;
       default:
@@ -165,8 +165,13 @@ class Calculator {
   // - braces
   handleAlgebraicButtonClick(operator) {
     if (this.currentInput.length === 0) {
-      this.currentInput = (this.currentInput || "0") + operator;
-    } else if (!isNaN(+(this.currentInput.at(-1) || NaN))) {
+      // Squareroot
+      if (operator === "√") {
+        this.currentInput = operator;
+      } else {
+        this.currentInput = (this.currentInput || "0") + operator;
+      }
+    } else if (!isNaN(+(this.currentInput.at(-1) || NaN)) || operator === "√") {
       this.currentInput += operator;
     } else {
       this.currentInput = this.currentInput.slice(0, -1) + operator;
