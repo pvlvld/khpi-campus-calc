@@ -62,7 +62,10 @@ class Calculator {
   init() {
     document.addEventListener("paste", (event) => {
       const data = event.clipboardData?.getData("text");
-      if (data && this.validateExpr(data)) this.ui.display.innerHTML = data;
+      if (data && this.validateExpr(data)) {
+        this.ui.display.resultInput.innerHTML = data;
+        this.currentInput = data;
+      }
     });
 
     document.addEventListener("keydown", (e) => {
