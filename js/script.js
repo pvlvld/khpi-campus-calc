@@ -37,6 +37,7 @@ class Calculator {
       permissions: { read: false, write: false }
     };
 
+    this.overwriteInput = false;
     this.requestClipboardPermissions();
   }
 
@@ -96,6 +97,13 @@ class Calculator {
             expression: this.ui.display.expression.innerHTML,
             result: result
           });
+          if (this.overwriteInput) {
+            this.currentInput = value;
+            this.overwriteInput = false;
+          } else {
+            this.currentInput += value;
+          }
+          this.ui.display.resultInput.innerHTML = this.currentInput;
           this.updateDisplay(undefined, result);
         } catch (error) {
           console.error(error);
@@ -104,6 +112,13 @@ class Calculator {
 
       case value === "C":
       case value === "CE":
+        if (this.overwriteInput) {
+          this.currentInput = value;
+          this.overwriteInput = false;
+        } else {
+          this.currentInput += value;
+        }
+        this.ui.display.resultInput.innerHTML = this.currentInput;
         this.clearDisplay();
         break;
 
@@ -113,7 +128,13 @@ class Calculator {
         break;
 
       case /^[0-9]$/.test(value):
-        this.ui.display.resultInput.innerHTML = this.currentInput += value;
+        if (this.overwriteInput) {
+          this.currentInput = value;
+          this.overwriteInput = false;
+        } else {
+          this.currentInput += value;
+        }
+        this.ui.display.resultInput.innerHTML = this.currentInput;
         break;
 
       case ["+", "-", "*", "/", "!", "%", "^", ".", "√"].includes(value):
@@ -251,10 +272,37 @@ class Calculator {
     return result;
   }
 
-  handleMemoryControl(action) {
+  handleMemoryControl(action, targetItem = null) {
     const currentValue = parseFloat(this.ui.display.resultInput.innerHTML);
+
+    if (targetItem) {
+      const span = targetItem.querySelector("span");
+      let value = parseFloat(span.textContent);
+
+      switch (action) {
+        case "M+":
+          value += currentValue;
+          break;
+        case "M−":
+          value -= currentValue;
+          break;
+        case "MC":
+          targetItem.remove();
+          return;
+      }
+
+      span.textContent = value;
+      return;
+    }
+
     const items = this.memoryUI.container.querySelectorAll(".memory-item");
-    const lastItem = items[items.length - 1];
+    let lastItem = items[0];
+
+    // 🧩 Додаємо: якщо нема памʼяті, створити 0
+    if ((action === "M+" || action === "M−") && !lastItem) {
+      this.appendMemoryItem(0);
+      lastItem = this.memoryUI.container.querySelector(".memory-item");
+    }
 
     switch (action) {
       case "MC":
@@ -266,51 +314,60 @@ class Calculator {
           const val = lastItem.querySelector("span").textContent;
           this.currentInput = val;
           this.ui.display.resultInput.innerHTML = val;
+          this.overwriteInput = true;
         }
         break;
 
       case "MS":
-        this.appendMemoryItem("MS", currentValue);
+        this.appendMemoryItem(currentValue);
         break;
 
       case "M+":
       case "M−":
         if (lastItem) {
           const span = lastItem.querySelector("span");
-          const oldValue = parseFloat(span.textContent);
+          let oldValue = parseFloat(span.textContent);
           const newValue = action === "M+" ? oldValue + currentValue : oldValue - currentValue;
-
           span.textContent = newValue;
-          lastItem.querySelector("div").textContent = `${action} ${currentValue}`;
         }
         break;
     }
   }
 
-  appendMemoryItem(label, result) {
+
+  appendMemoryItem(value) {
     const item = document.createElement("div");
     item.classList.add("memory-item");
 
-    const labelDiv = document.createElement("div");
-    labelDiv.textContent = label;
-
-    const resultSpan = document.createElement("span");
-    resultSpan.textContent = result;
+    const labelSpan = document.createElement("span");
+    labelSpan.textContent = value;
 
     const controlls = document.createElement("div");
     controlls.className = "memory-item-controlls";
-    controlls.innerHTML = `
-    <button onclick="app.handleMemoryControl('M+')">M+</button>
-    <button onclick="app.handleMemoryControl('M−')">M−</button>
-    <button onclick="app.handleMemoryControl('MC')">MC</button>
-  `;
 
-    item.appendChild(labelDiv);
-    item.appendChild(resultSpan);
+    const btnPlus = document.createElement("button");
+    btnPlus.textContent = "M+";
+    btnPlus.onclick = () => this.handleMemoryControl("M+", item);
+
+    const btnMinus = document.createElement("button");
+    btnMinus.textContent = "M−";
+    btnMinus.onclick = () => this.handleMemoryControl("M−", item);
+
+    const btnClear = document.createElement("button");
+    btnClear.textContent = "MC";
+    btnClear.onclick = () => this.handleMemoryControl("MC", item);
+
+    controlls.appendChild(btnPlus);
+    controlls.appendChild(btnMinus);
+    controlls.appendChild(btnClear);
+
+    item.appendChild(labelSpan);
     item.appendChild(controlls);
 
-    this.memoryUI.container.appendChild(item);
+    this.memoryUI.container.prepend(item);
   }
+
+
 }
 
 class MathExpressionParser {
