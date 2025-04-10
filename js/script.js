@@ -142,10 +142,15 @@ class Calculator {
       case value === "CE":
         this.clearDisplay();
         break;
+      case value === "←":
+        this.currentInput = this.currentInput.slice(0, -1) || "";
+        this.ui.display.resultInput.innerHTML =
+          this.currentInput || "0";
+        break;
       case /^[0-9]$/.test(value):
         this.ui.display.resultInput.innerHTML = this.currentInput += value;
         break;
-      case ["+", "-", "*", "/", "!", "%", "^"].includes(value):
+      case ["+", "-", "*", "/", "!", "%", "^", "."].includes(value):
         this.handleAlgebraicButtonClick(value);
         break;
       default:
@@ -154,6 +159,10 @@ class Calculator {
     }
   }
 
+  // TODO:
+  // - refactor (fix: % is still allowed as a modulo)
+  // - fix multiple dot as a fraction
+  // - braces
   handleAlgebraicButtonClick(operator) {
     if (this.currentInput.length === 0) {
       this.currentInput = (this.currentInput || "0") + operator;
@@ -246,7 +255,9 @@ class Calculator {
 
   calculateExpression() {
     if (!this.validateExpr(this.currentInput)) {
-      throw new Error("Invalid expression");
+      // TODO: do we even need a validation?
+      // throw new Error("Invalid expression");
+      console.log(`Invalid expression: ${this.currentInput}`);
     }
 
     const expr = this.prepareExpression(this.currentInput);
