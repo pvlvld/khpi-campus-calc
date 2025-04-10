@@ -80,7 +80,7 @@ body {
   width: 20rem;
 }
 
-#hist-mem-content {
+#history-content, #memory-content {
   text-align: right;
 }
 
@@ -94,7 +94,7 @@ body {
   }
 }
 
-.hist-mem-item:hover {
+.memory-item:hover, .history-item:hover {
   background-color: var(--color-secondary);
 }
 
