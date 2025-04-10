@@ -217,7 +217,7 @@ class Calculator {
   generateHistoryItem(expression, result) {
     const item = this.ui.templates.historyItem.cloneNode();
     item.appendChild(document.createElement("div")).innerHTML = expression;
-    item.appendChild(document.createElement("div")).innerHTML = "" + result;
+    item.appendChild(document.createElement("span")).innerHTML = "" + result;
 
     return item;
   }

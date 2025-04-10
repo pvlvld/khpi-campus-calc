@@ -98,6 +98,19 @@ body {
   background-color: var(--color-secondary);
 }
 
+.history-item {
+    & div {
+        color: var(--color-inactive-font);
+        font-weight: 600;
+        font-size: medium;
+    }
+    & span {
+        color: var(--color-font);
+        font-size: x-large;
+        font-weight: 900;
+    }
+}
+
 .arithmetic:hover {
     background-color: var(--color-accent);
 } 
