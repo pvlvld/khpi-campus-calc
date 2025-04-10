@@ -313,6 +313,10 @@ class MathExpressionParser {
     if (exp.startsWith("-")) return -this.parseExp(exp.slice(1));
     if (exp.startsWith("+")) return this.parseExp(exp.slice(1));
     if (exp.startsWith("√")) return Math.sqrt(this.parseExp(exp.slice(1)));
+    // Convert percent to decimal
+    if (exp.endsWith("%") && !this.hasOperator(exp.slice(0, -1))) {
+      return parseFloat(exp.slice(0, -1)) / 100;
+    }
 
     const {operator, index} = this.findLowestPriorityOperator(exp);
 
