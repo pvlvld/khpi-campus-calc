@@ -266,8 +266,11 @@ class Calculator {
    */
   generateHistoryItem(expression, result) {
     const item = this.ui.templates.historyItem.cloneNode();
+
     item.appendChild(document.createElement("div")).innerHTML = expression;
     item.appendChild(document.createElement("span")).innerHTML = "" + result;
+
+    item.addEventListener("click", this.historyItemClickHandler.bind(this));
 
     return item;
   }
@@ -289,9 +292,16 @@ class Calculator {
   }
 
   historyItemClickHandler(e) {
-    if (!e.target.classList.contains("history-item")) return;
-    this.ui.display.innerHTML = e.target.innerText;
-    navigator.clipboard.writeText(e.target.innerText);
+    const expression = e.currentTarget.querySelector("div").innerText;
+    const result = e.currentTarget.querySelector("span").innerText;
+
+    if (DEBUG) console.log(`H: Expression: ${expression}, Result: ${result}`);
+
+    this.ui.display.resultInput.innerHTML = result;
+    this.ui.display.expression.innerHTML = expression;
+
+    this.currentInput = expression.slice(0, -1);
+    navigator.clipboard.writeText(this.currentInput);
   }
 
   calculateExpression() {
