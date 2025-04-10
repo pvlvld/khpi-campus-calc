@@ -1,6 +1,4 @@
 * {
-  margin: 0;
-  padding: 0;
   box-sizing: border-box;
   color: white;
   font-family: "Segoe UI", Arial, sans-serif;
@@ -12,105 +10,365 @@
   --color-inactive-font: #A5A5A5;
 }
 
+html,
 body {
-  background: #202020;
-  padding: 20px 4px 4px 4px;
-  width: 100vw;
+  margin: 0;
+  padding: 0;
   height: 100vh;
-}
-
-.btn {
-  background-color: var(--color-primary);
-  height: 600px;
-}
-
-.btn:hover {
-  background-color: var(--color-secondary);
-}
-
-.btn:active {
-  background-color: var(--color-tertiary);
-}
-
-#display {
-  width: 100%;
-  font-size: 3.5rem;
-  font-weight: bold;
-  text-align: right;
-  height: 5rem;
-  & #display-expression {
-    color: grey;
-    font-weight: 400;
-    font-size: 1rem;
-    min-height: 1.1rem;
-  }
-  & #display-input-result {
-    font-weight: bold;
-  }
+  width: 100vw;
+  overflow: hidden;
+  background: #202020;
 }
 
 #calculator {
   display: flex;
-  width: 100%;
+  flex-direction: row;
   height: 100%;
-  & #main {
-    width: 80%;
-    height: 100%;
-  }
+  width: calc(100vw - 3rem);
+  margin-left: 3rem;
+  overflow: hidden;
+}
+
+#main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+#display {
+  width: 100%;
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  font-weight: bold;
+  text-align: right;
+  height: 5rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#display #display-expression {
+  color: grey;
+  font-weight: 400;
+  font-size: 1rem;
+  min-height: 1.1rem;
+}
+
+#display #display-input-result {
+  font-weight: bold;
+}
+
+#memory-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  margin: 4px 0;
+  height: 2.5rem;
+}
+
+#memory-buttons .btn {
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: var(--color-secondary);
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#memory-buttons .btn:hover {
+  background-color: var(--color-primary);
 }
 
 #keyboard-standart {
+  flex: 1;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  height: calc(100% - 5rem);
+  grid-auto-rows: 1fr;
   gap: 2px;
-  justify-items: stretch;
-  align-items: stretch;
-  & .btn {
-    height: 100%;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-    align-content: center;
-  }
+}
+
+#keyboard-standart .btn {
+  font-size: clamp(1.2rem, 2vw, 2rem);
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: var(--color-primary);
+}
+
+#keyboard-standart .btn:hover {
+  background-color: var(--color-secondary);
+}
+
+#keyboard-standart .btn:active {
+  background-color: var(--color-tertiary);
+}
+
+.arithmetic:hover {
+  background-color: var(--color-accent);
 }
 
 #hist-mem {
-  width: 20rem;
-}
-
-#history-content, #memory-content {
-  text-align: right;
+  width: clamp(16rem, 20%, 20rem);
+  height: 100%;
+  overflow-y: auto;
+  background-color: var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
 }
 
 #hist-mem-title {
   display: flex;
-  & * {
-    margin: 0 20px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
+  justify-content: space-around;
+  background-color: var(--color-tertiary);
+  padding: 8px 0;
+}
+
+#hist-mem-title * {
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#history-content,
+#memory-content {
+  padding: 10px;
+  text-align: right;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.history-item div {
+  color: var(--color-inactive-font);
+  font-weight: 600;
+  font-size: medium;
+}
+
+.history-item span {
+  color: var(--color-font);
+  font-size: x-large;
+  font-weight: 900;
+}
+
+.history-item:hover,
+.memory-item:hover {
+  background-color: var(--color-tertiary);
+}
+
+.memory-item {
+  padding: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.memory-item span {
+  font-size: x-large;
+}
+
+.memory-item-controlls {
+  display: flex;
+  gap: 4px;
+}
+
+.memory-item-controlls button {
+  background: var(--color-tertiary);
+  border: none;
+  color: white;
+  font-size: 0.9rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.memory-item-controlls button:hover {
+  background-color: var(--color-accent);
+}
+
+.memory-item-controlls button:active {
+  background-color: var(--color-primary);
+}
+
+/* === SIDEBAR === */
+#sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 3rem;
+  height: 100vh;
+  background-color: var(--color-tertiary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
+
+#sidebar-toggle {
+  font-size: 2rem;
+  margin: 1rem 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+#sidebar-modes {
+  display: none;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem 0.5rem;
+  width: 100%;
+}
+
+#sidebar.active #sidebar-modes {
+  display: flex;
+}
+
+.mode-button {
+  background-color: var(--color-primary);
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+}
+
+.mode-button:hover {
+  background-color: var(--color-accent);
+}
+
+#mobile-only-buttons {
+  display: none;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+}
+
+#mobile-only-buttons button {
+  background-color: var(--color-primary);
+  border: none;
+  color: white;
+  padding: 6px 8px;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#mobile-only-buttons button:hover {
+  background-color: var(--color-accent);
+}
+
+/* === MEMORY SLIDER (MOBILE) === */
+#memory-slider {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: var(--color-secondary);
+  padding: 12px;
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--color-font);
+  border-top: 2px solid var(--color-tertiary);
+  z-index: 999;
+}
+
+/* === MOBILE MODE === */
+@media (max-width: 768px) {
+
+  html,
+  body {
+    overflow: auto;
+  }
+
+  #hist-mem.active #hist-mem-title #hist-mem-title-memory {
+    display: none;
+  }
+
+  #calculator {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    margin-left: 0;
+    overflow: hidden;
+  }
+
+  #main {
+    height: 100%;
+    width: 100%;
+  }
+
+  #display {
+    font-size: 2.5rem;
+    padding: 0 12px;
+    height: 4.5rem;
+  }
+
+  #memory-buttons {
+    height: 2.5rem;
+  }
+
+  #keyboard-standart .btn {
+    font-size: 1.6rem;
+    padding: 0;
+  }
+
+  #hist-mem {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40vh;
+    background-color: var(--color-secondary);
+    border-top: 2px solid var(--color-tertiary);
+    transform: translateY(100%);
+    z-index: 998;
+  }
+
+  #hist-mem.active {
+    transform: translateY(0);
+  }
+
+  #hist-mem-title {
+    justify-content: center;
+    background-color: var(--color-tertiary);
+    padding: 8px 0;
+  }
+
+  #sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    flex-direction: column;
+    padding: 0.5rem 1rem;
+  }
+
+  #sidebar-toggle {
+    align-self: flex-start;
+    margin-bottom: 0.5rem;
+  }
+
+  #sidebar-modes {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  #mobile-only-buttons {
+    display: flex;
+  }
+
+  #memory-slider {
+    font-size: 1.2rem;
+    padding: 8px;
   }
 }
-
-.memory-item:hover, .history-item:hover {
-  background-color: var(--color-secondary);
-}
-
-.history-item {
-    & div {
-        color: var(--color-inactive-font);
-        font-weight: 600;
-        font-size: medium;
-    }
-    & span {
-        color: var(--color-font);
-        font-size: x-large;
-        font-weight: 900;
-    }
-}
-
-.arithmetic:hover {
-    background-color: var(--color-accent);
-} 

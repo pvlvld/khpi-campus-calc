@@ -1,71 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Simple Calculator</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.2.1/math.min.js"
-      defer
-    ></script>
-    <script src="js/script.js" defer></script>
-  </head>
-  <body>
-    <div id="calculator">
-      <div id="main">
-        <div id="display">
-          <div id="display-expression"></div>
-          <div id="display-input-result">0</div>
-        </div>
-        <div id="keyboard-standart">
-          <div class="btn">%</div>
-          <div class="btn">CE</div>
-          <div class="btn">C</div>
-          <div class="btn">←</div>
-          <div class="btn arithmetic">/</div>
-          <div class="btn">√</div>
-          <div class="btn">7</div>
-          <div class="btn">8</div>
-          <div class="btn">9</div>
-          <div class="btn arithmetic">*</div>
-          <div class="btn">^</div>
-          <div class="btn">4</div>
-          <div class="btn">5</div>
-          <div class="btn">6</div>
-          <div class="btn arithmetic">-</div>
-          <div class="btn">!</div>
-          <div class="btn">1</div>
-          <div class="btn">2</div>
-          <div class="btn">3</div>
-          <div class="btn arithmetic">+</div>
-          <!-- TODO: -->
-          <div class="btn">( )</div>
-          <div class="btn">±</div>
-          <div class="btn">0</div>
-          <div class="btn">.</div>
-          <div class="btn">=</div>
-        </div>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Calculator</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/14.2.1/math.min.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+
+<body>
+  <div id="sidebar">
+    <div id="sidebar-toggle">☰</div>
+
+    <!-- Кнопки режимів (завжди ховаються/показуються через бургер) -->
+    <div id="sidebar-modes">
+      <button class="mode-button">Standard</button>
+      <button class="mode-button">Scientific</button>
+      <button class="mode-button">Programmer</button>
+      <button class="mode-button">Converter</button>
+    </div>
+
+    <!-- Тільки на мобілці, завжди видимі -->
+    <div id="mobile-only-buttons">
+      <button id="open-journal">Journal</button>
+      <button id="toggle-memory-slider">Mv</button>
+    </div>
+  </div>
+
+
+  <div id="calculator">
+    <div id="main">
+      <div id="display">
+        <div id="display-expression"></div>
+        <div id="display-input-result">0</div>
       </div>
-      <div id="hist-mem">
-        <div id="hist-mem-title">
-          <strong id="hist-mem-title-hostory">History</strong>
-          <strong id="hist-mem-title-memory">Memory</strong>
-        </div>
 
-        <div id="history-content">
-          <div class="history-item"></div>
-        </div>
+      <div id="memory-buttons">
+        <div class="btn memory-control">MC</div>
+        <div class="btn memory-control">MR</div>
+        <div class="btn memory-control">MS</div>
+        <div class="btn memory-control">M+</div>
+        <div class="btn memory-control">M−</div>
+      </div>
 
-        <div id="memory-content" style="display: none">
-          <div class="memory-item">
-            <span>69</span>
-            <div class="memory-item-controlls">
-              <!-- TODO: -->
-            </div>
-          </div>
-        </div>
+      <div id="keyboard-standart">
+        <div class="btn">%</div>
+        <div class="btn">CE</div>
+        <div class="btn">C</div>
+        <div class="btn">←</div>
+        <div class="btn arithmetic">/</div>
+        <div class="btn">√</div>
+        <div class="btn">7</div>
+        <div class="btn">8</div>
+        <div class="btn">9</div>
+        <div class="btn arithmetic">*</div>
+        <div class="btn">^</div>
+        <div class="btn">4</div>
+        <div class="btn">5</div>
+        <div class="btn">6</div>
+        <div class="btn arithmetic">-</div>
+        <div class="btn">!</div>
+        <div class="btn">1</div>
+        <div class="btn">2</div>
+        <div class="btn">3</div>
+        <div class="btn arithmetic">+</div>
+        <div class="btn">1/x</div>
+        <div class="btn">±</div>
+        <div class="btn">0</div>
+        <div class="btn">.</div>
+        <div class="btn">=</div>
       </div>
     </div>
-  </body>
+
+    <div id="hist-mem">
+      <div id="hist-mem-title">
+        <strong id="hist-mem-title-hostory" onclick="switchTab('history')">History</strong>
+        <strong id="hist-mem-title-memory" onclick="switchTab('memory')">Memory</strong>
+      </div>
+      <div id="history-content">
+        <div class="history-item"></div>
+      </div>
+      <div id="memory-content" style="display: none">
+        <!-- dynamic -->
+      </div>
+    </div>
+  </div>
+  <div id="memory-slider"></div>
+</body>
+
 </html>
