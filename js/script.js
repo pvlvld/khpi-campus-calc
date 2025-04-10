@@ -42,7 +42,9 @@ class Calculator {
           document.getElementById("display-input-result")
         )
       },
-      history: /** @type {HTMLElement} */ (document.getElementById("history-content")),
+      history: /** @type {HTMLElement} */ (
+        document.getElementById("history-content")
+      ),
       buttons: document.querySelectorAll(".btn"),
 
       templates: {
@@ -136,20 +138,24 @@ class Calculator {
           console.error(error);
         }
         break;
+
       case value === "C":
         this.clearDisplay();
         break;
+
       case value === "CE":
         this.clearDisplay();
         break;
+
       case value === "←":
         this.currentInput = this.currentInput.slice(0, -1) || "";
-        this.ui.display.resultInput.innerHTML =
-          this.currentInput || "0";
+        this.ui.display.resultInput.innerHTML = this.currentInput || "0";
         break;
+
       case /^[0-9]$/.test(value):
         this.ui.display.resultInput.innerHTML = this.currentInput += value;
         break;
+
       case ["+", "-", "*", "/", "!", "%", "^", ".", "√"].includes(value):
         this.handleAlgebraicButtonClick(value);
         break;
@@ -222,10 +228,7 @@ class Calculator {
     // JSON representation locally or plain HTML string?
     // const data = {history: this.ui.history.innerHTML};
     // localStorage.setItem(this.name, JSON.stringify(data));
-    const historyItem = this.generateHistoryItem(
-      item.expression,
-      item.result
-    );
+    const historyItem = this.generateHistoryItem(item.expression, item.result);
     this.ui.history.appendChild(historyItem);
   }
 
