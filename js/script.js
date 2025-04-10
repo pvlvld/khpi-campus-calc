@@ -1,6 +1,6 @@
 // https://github.com/microsoft/calculator/raw/refs/heads/main/src/Calculator/Assets/CalculatorIcons.ttf
 // Icons Font
-const DEBUG = false;
+const DEBUG = true;
 
 const FUNCTIONS = [
   "√",
