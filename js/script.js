@@ -641,18 +641,11 @@ document
     }
   });
 
-// === Закриття слайдера поза ним (моб)
+// Close slider on click outside
 document.addEventListener("click", (e) => {
-  const histMem = document.getElementById("hist-mem");
   const sidebar = document.getElementById("sidebar");
-  const isMobile = window.innerWidth <= 768;
-
-  if (
-    isMobile &&
-    histMem?.classList.contains("active") &&
-    !histMem.contains(e.target) &&
-    !sidebar?.contains(e.target)
-  ) {
-    histMem.classList.remove("active");
+  if (sidebar && !sidebar?.contains(e.target)) {
+    sidebar.classList.remove("active");
+    sidebar.style.width = "3rem";
   }
 });
