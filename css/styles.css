@@ -44,7 +44,24 @@ body {
   flex-direction: column;
   justify-content: space-evenly;
   & > .converter-item {
+    display: flex;
+    flex-direction: column;
   }
+}
+
+#converter-input-from, #converter-input-to {
+  z-index: -1;
+  position: absolute;
+  top: -999px;
+}
+
+.unstyled-input {
+  all: unset;
+  display: inline;
+  font: inherit;
+  color: inherit;
+  cursor: text;
+  background-color: transparent;
 }
 
 select,

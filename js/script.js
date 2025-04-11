@@ -607,6 +607,7 @@ class App {
 
   init() {
     this.calculator.init();
+    this.converter.init();
     this.calculator.clearDisplay();
 
     // UI
@@ -669,6 +670,14 @@ class App {
         }
       });
     });
+
+    document.addEventListener("keydown", (e) => {
+      if (this.activeTab === "Calculator") {
+        this.calculator.handleKeyPress(e);
+      } else {
+        this.converter.ui.inputFrom.focus();
+      }
+    })
   }
 
   /**
@@ -711,7 +720,13 @@ class Converter {
       ),
       selectTo: /** @type {HTMLSelectElement} */ (
         document.getElementById("converter-select-to")
-      )
+      ),
+      convertFrom: /** @type {HTMLButtonElement} */ (
+        document.getElementById("converter-convert-from")
+      ),
+      convertTo: /** @type {HTMLButtonElement} */ (
+        document.getElementById("converter-convert-to")
+      ),
     };
 
     this.conversionRates = {
@@ -738,18 +753,15 @@ class Converter {
   }
 
   init() {
-    this.ui.inputFrom.addEventListener("input", () => {
-      this.convert(this.ui.inputFrom, this.ui.selectFrom, this.ui.selectTo);
-    });
-    this.ui.inputTo.addEventListener("input", () => {
-      this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
-    });
     this.ui.selectFrom.addEventListener("change", () => {
       this.convert(this.ui.inputFrom, this.ui.selectFrom, this.ui.selectTo);
     });
     this.ui.selectTo.addEventListener("change", () => {
       this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
     });
+    this.ui.inputFrom.addEventListener("input", () => {
+      this.ui.convertFrom.innerText = this.ui.inputFrom.value
+    })
   }
 
   convert(input, from, to) {
