@@ -8,6 +8,7 @@
   --color-accent: #0077D7;
   --color-font: #FFFFFF;
   --color-inactive-font: #A5A5A5;
+  --color-brn-hover-default: #4C4C4C;
 }
 
 html,
@@ -217,9 +218,15 @@ body {
   cursor: pointer;
   user-select: none;
   position: absolute;
-  top: 10px;
-  left: 10px;
   z-index: 4;
+  width: 3rem;
+  height: 3rem;
+  text-align: center;
+  align-content: center;
+}
+
+#sidebar-toggle:hover {
+  background-color: var(--color-brn-hover-default);
 }
 
 #sidebar-modes {
