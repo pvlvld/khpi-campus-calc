@@ -31,16 +31,16 @@ class Calculator {
           document.getElementById("display-input-result")
         )
       },
-      history: /** @type {HTMLElement} */ (
-        document.getElementById("history-content")
-      ),
       buttons: document.querySelectorAll(".btn"),
       templates: {
         historyItem: document.createElement("div")
       },
+      history: /** @type {HTMLElement} */ (
+        document.getElementById("history-content")
+      ),
       memory: /** @type {HTMLElement} */ (
         document.getElementById("memory-content")
-      )
+      ),
     };
     this.ui.templates.historyItem.classList.add("history-item");
 
@@ -87,6 +87,26 @@ class Calculator {
         this.handleMemoryControl(btn.innerText)
       );
     });
+
+    document.querySelectorAll(".hist-mem-tab").forEach((tab) => {
+      tab.addEventListener("click", (e) => {
+        document
+          .querySelectorAll(".hist-mem-tab")
+          .forEach((t) => t.classList.remove("active"));
+        tab.classList.add("active");
+        this.switchTab(e);
+      });
+    });
+  }
+
+  switchTab(e) {
+    if (e.target?.innerText === "History") {
+      this.ui.history.style.display = "block";
+      this.ui.memory.style.display = "none";
+    } else {
+      this.ui.history.style.display = "none";
+      this.ui.memory.style.display = "block";
+    }
   }
 
   requestClipboardPermissions() {
@@ -349,7 +369,7 @@ class Calculator {
           if (!val) throw new Error("Memory item span not found");
           this.currentInput = val;
           this.ui.display.resultInput.innerHTML = val;
-          this.overwriteInput = true;
+          this.overwriteInput = false;
         }
         break;
 
@@ -575,26 +595,14 @@ class MathExpressionParser {
   }
 }
 
-// === Вкладки (історія/пам’ять)
-function switchTab(tab) {
-  const hist = /** @type {HTMLElement} */ (
-    document.getElementById("history-content")
-  );
-  const mem = /** @type {HTMLElement} */ (
-    document.getElementById("memory-content")
-  );
-  if (tab === "history") {
-    hist.style.display = "block";
-    mem.style.display = "none";
-  } else {
-    hist.style.display = "none";
-    mem.style.display = "block";
-  }
-}
-
 class App {
   constructor() {
     this.calculator = new Calculator();
+    this.converter = new Converter();
+    /**
+     * @type {"Calculator" | "Converter"}
+     */
+    this.activeTab = "Calculator";
   }
 
   init() {
@@ -612,7 +620,7 @@ class App {
         if (sidebar?.classList.contains("active")) {
           sidebar.style.width = "10rem";
         } else {
-          sidebar ? (sidebar.style.width = "3rem") : null;
+          sidebar ? (sidebar.style.width = "") : null;
         }
       }
     });
@@ -629,7 +637,7 @@ class App {
         !toggleBtn.contains(e.target)
       ) {
         sidebar.classList.remove("active");
-        sidebar.style.width = "3rem";
+        sidebar.style.width = "";
       }
       // at least i tried
       e.preventDefault();
@@ -645,23 +653,148 @@ class App {
       if (isMobile) {
         histMem?.classList.toggle("active");
       } else {
-        switchTab("history");
+        this.calculator.switchTab("history");
       }
     });
 
-    // Memory controls
-    document
-      .getElementById("toggle-memory-slider")
-      ?.addEventListener("click", () => {
-        const slider = document.getElementById("memory-slider");
-        if (!slider) throw new Error("Memory slider not found");
-        if (slider.style.display === "block") {
-          slider.style.display = "none";
-        } else {
-          slider.innerText = "Memory: " + (this.calculator.memory || 0);
-          slider.style.display = "block";
+    // Switch between calculator and converter
+    document.querySelectorAll(".mode-button").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        if (
+          e.target instanceof HTMLButtonElement &&
+          e.target.innerText !== this.activeTab
+        ) {
+          // @ts-expect-error
+          this.switchScreen(e.target.innerText);
         }
       });
+    });
+  }
+
+  /**
+   *
+   * @param {"Calculator" | "Converter"} tab
+   */
+  switchScreen(tab) {
+    const conv = /** @type {HTMLElement} */ (
+      document.getElementById("converter")
+    );
+    const calc = /** @type {HTMLElement} */ (
+      document.getElementById("calculator")
+    );
+    if (tab === "Converter") {
+      conv.style.display = "block";
+      calc.style.display = "none";
+    } else {
+      conv.style.display = "none";
+      calc.style.display = "flex";
+    }
+    this.activeTab = tab;
+  }
+}
+
+class Converter {
+  constructor() {
+    /**
+     * @type {"Length" | "Weight" | "Temperature"}
+     */
+    this.layout = "Length";
+    this.ui = {
+      inputFrom: /** @type {HTMLInputElement} */ (
+        document.getElementById("converter-input-from")
+      ),
+      inputTo: /** @type {HTMLInputElement} */ (
+        document.getElementById("converter-input-to")
+      ),
+      selectFrom: /** @type {HTMLSelectElement} */ (
+        document.getElementById("converter-select-from")
+      ),
+      selectTo: /** @type {HTMLSelectElement} */ (
+        document.getElementById("converter-select-to")
+      )
+    };
+
+    this.conversionRates = {
+      Length: {
+        m: 1,
+        km: 0.001,
+        cm: 100,
+        mm: 1000,
+        ft: 3.28084,
+        in: 39.3701
+      },
+      Weight: {
+        kg: 1,
+        g: 1000,
+        lb: 2.20462,
+        oz: 35.274
+      },
+      Temperature: {
+        C: (value) => +value,
+        F: (value) => (value - 32) * (5 / 9),
+        K: (value) => +value + 273.15
+      }
+    };
+  }
+
+  init() {
+    this.ui.inputFrom.addEventListener("input", () => {
+      this.convert(this.ui.inputFrom, this.ui.selectFrom, this.ui.selectTo);
+    });
+    this.ui.inputTo.addEventListener("input", () => {
+      this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
+    });
+    this.ui.selectFrom.addEventListener("change", () => {
+      this.convert(this.ui.inputFrom, this.ui.selectFrom, this.ui.selectTo);
+    });
+    this.ui.selectTo.addEventListener("change", () => {
+      this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
+    });
+  }
+
+  convert(input, from, to) {
+    const value = parseFloat(input.value);
+    if (isNaN(value)) {
+      input.value = "";
+      return;
+    }
+
+    const fromUnit = from.options[from.selectedIndex].value;
+    const toUnit = to.options[to.selectedIndex].value;
+
+    let result = this.convertUnits(value, fromUnit, toUnit);
+    to.value = result.toFixed(2);
+  }
+
+  convertUnits(value, fromUnit, toUnit) {
+    if (this.layout === "Temperature") {
+      return this.conversionRates[this.layout][toUnit](
+        this.conversionRates[this.layout][fromUnit](value)
+      );
+    }
+
+    return (
+      (value * this.conversionRates[this.layout][fromUnit]) /
+      this.conversionRates[this.layout][toUnit]
+    );
+  }
+
+  switchLayout(layout) {
+    this.layout = layout;
+    this.ui.selectFrom.innerHTML = "";
+    this.ui.selectTo.innerHTML = "";
+
+    Object.keys(this.conversionRates[layout]).forEach((unit) => {
+      const optionFrom = document.createElement("option");
+      optionFrom.value = unit;
+      optionFrom.textContent = unit;
+      this.ui.selectFrom.appendChild(optionFrom);
+
+      const optionTo = document.createElement("option");
+      optionTo.value = unit;
+      optionTo.textContent = unit;
+      this.ui.selectTo.appendChild(optionTo);
+    });
   }
 }
 

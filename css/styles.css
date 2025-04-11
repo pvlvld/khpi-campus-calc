@@ -2,13 +2,14 @@
   box-sizing: border-box;
   color: white;
   font-family: "Segoe UI", Arial, sans-serif;
-  --color-primary: #747475;
-  --color-secondary: #353535;
+  --color-primary: #1f1f1f;
+  --color-button: #797979;
+  --color-secondary: #343434;
   --color-tertiary: #494949;
-  --color-accent: #0077D7;
-  --color-font: #FFFFFF;
-  --color-inactive-font: #A5A5A5;
-  --color-brn-hover-default: #4C4C4C;
+  --color-accent: #0077d7;
+  --color-font: #ffffff;
+  --color-inactive-font: #a5a5a5;
+  --color-brn-hover-default: #4c4c4c;
 }
 
 html,
@@ -18,16 +19,44 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-  background: #202020;
+  background: var(--color-primary);
 }
 
-#calculator {
+#calculator,
+#converter {
   display: flex;
   flex-direction: row;
   height: 100%;
-  width: calc(100vw - 3rem);
-  margin-left: 3rem;
+  width: 100vw;
   overflow: hidden;
+}
+
+#converter-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 90px 60px;
+  height: 100%;
+}
+
+#conversion-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  & > .converter-item {
+  }
+}
+
+select,
+select option {
+  all: unset;
+  appearance: auto;
+  -webkit-appearance: auto;
+  -moz-appearance: auto;
+  background-color: var(--color-primary);
+  background: var(--color-primary);
+  accent-color: transparent;
+  border: none;
 }
 
 #main {
@@ -72,7 +101,6 @@ body {
 #memory-buttons .btn {
   font-size: 1rem;
   font-weight: bold;
-  background-color: var(--color-secondary);
   border-radius: 4px;
   display: flex;
   justify-content: center;
@@ -81,7 +109,7 @@ body {
 }
 
 #memory-buttons .btn:hover {
-  background-color: var(--color-primary);
+  background-color: var(--color-secondary);
 }
 
 #keyboard-standart {
@@ -100,7 +128,7 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background-color: var(--color-primary);
+  background-color: var(--color-button);
 }
 
 #keyboard-standart .btn:hover {
@@ -119,7 +147,7 @@ body {
   width: clamp(16rem, 20%, 20rem);
   height: 100%;
   overflow-y: auto;
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   display: flex;
   flex-direction: column;
   z-index: 5;
@@ -127,15 +155,9 @@ body {
 
 #hist-mem-title {
   display: flex;
-  justify-content: space-around;
-  background-color: var(--color-tertiary);
-  padding: 8px 0;
-}
-
-#hist-mem-title * {
-  font-size: 1rem;
-  font-weight: bold;
   cursor: pointer;
+  justify-content: space-evenly;
+  padding: 8px 0;
 }
 
 #history-content,
@@ -203,9 +225,8 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 3rem;
   height: 100vh;
-  background-color: var(--color-tertiary);
+  background-color: var(--color-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -284,18 +305,39 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
-  background: var(--color-secondary);
+  background: var(--color-primary);
   padding: 12px;
   text-align: center;
   font-size: 1.5rem;
   color: var(--color-font);
   border-top: 2px solid var(--color-tertiary);
-  z-index: 999;
+  z-index: 666;
+}
+
+.hist-mem-tab {
+  padding: 8px 0px;
+  font-weight: bold;
+  position: relative;
+  color: var(--color-inactive-font);
+}
+
+.hist-mem-tab.active {
+  color: white;
+}
+
+.hist-mem-tab.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
 }
 
 /* === MOBILE MODE === */
 @media (max-width: 768px) {
-
   html,
   body {
     overflow: auto;
