@@ -663,7 +663,7 @@ class App {
       } else {
         this.converter.ui.inputFrom.focus();
       }
-    })
+    });
   }
 
   /**
@@ -712,7 +712,7 @@ class Converter {
       ),
       convertTo: /** @type {HTMLButtonElement} */ (
         document.getElementById("converter-convert-to")
-      ),
+      )
     };
 
     this.conversionRates = {
@@ -745,9 +745,26 @@ class Converter {
     this.ui.selectTo.addEventListener("change", () => {
       this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
     });
-    this.ui.inputFrom.addEventListener("input", () => {
-      this.ui.convertFrom.innerText = this.ui.inputFrom.value
-    })
+    this.ui.inputFrom.addEventListener("input", (e) => {
+      let currentValue = e.target.value || "0";
+      const isNegative = currentValue.startsWith("-");
+
+      const isValidNumber = /^-?\d*\.?\d*$/.test(currentValue);
+      if (!isValidNumber) {
+        return void (e.target.value = this.ui.convertFrom.innerText);
+      }
+
+      if (currentValue === "0" || currentValue === "-0") {
+        return void (this.ui.convertFrom.innerText = currentValue);
+      }
+
+      if (/^-?0\d+/.test(currentValue)) {
+        let cleanValue = currentValue.replace(/^-?0+/, "") || "0";
+        e.target.value = isNegative ? -Math.abs(cleanValue) : cleanValue;
+      }
+
+      this.ui.convertFrom.innerText = e.target.value;
+    });
   }
 
   convert(input, from, to) {
