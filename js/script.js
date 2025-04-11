@@ -644,7 +644,13 @@ document
 // Close slider on click outside
 document.addEventListener("click", (e) => {
   const sidebar = document.getElementById("sidebar");
-  if (sidebar && !sidebar?.contains(e.target)) {
+  const toggleBtn = document.getElementById("sidebar-toggle");
+  if (
+    toggleBtn &&
+    sidebar &&
+    !sidebar?.contains(e.target) &&
+    !toggleBtn.contains(e.target)
+  ) {
     sidebar.classList.remove("active");
     sidebar.style.width = "3rem";
   }

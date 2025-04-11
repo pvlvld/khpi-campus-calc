@@ -208,14 +208,17 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1000;
+  z-index: 3;
 }
 
 #sidebar-toggle {
   font-size: 2rem;
-  margin: 1rem 0;
   cursor: pointer;
   user-select: none;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 4;
 }
 
 #sidebar-modes {
