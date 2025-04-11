@@ -160,21 +160,18 @@ class Calculator {
           const currentValue = parseFloat(
             this.ui.display.resultInput.innerHTML
           );
-          if (currentValue === 0) {
-            this.ui.display.resultInput.innerHTML = "Cannot divide by 0";
-          } else {
-            const lastNumberMatch = this.currentInput.match(
-              /(-?\d+(\.\d+)?)(?!.*\d)/
-            );
-            if (lastNumberMatch) {
-              const number = lastNumberMatch[0];
-              const index = this.currentInput.lastIndexOf(number);
-              const before = this.currentInput.slice(0, index);
-              const after = this.currentInput.slice(index + number.length);
+          if (currentValue === 0) return;
+          const lastNumberMatch = this.currentInput.match(
+            /(-?\d+(\.\d+)?)(?!.*\d)/
+          );
+          if (lastNumberMatch) {
+            const number = lastNumberMatch[0];
+            const index = this.currentInput.lastIndexOf(number);
+            const before = this.currentInput.slice(0, index);
+            const after = this.currentInput.slice(index + number.length);
 
-              this.currentInput = `${before}(1/(${number}))${after}`;
-              this.ui.display.resultInput.innerHTML = this.currentInput;
-            }
+            this.currentInput = `${before}(1/(${number}))${after}`;
+            this.ui.display.resultInput.innerHTML = this.currentInput;
           }
         } catch (e) {
           console.error("Invalid 1/x operation", e);
