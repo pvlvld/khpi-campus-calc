@@ -562,7 +562,7 @@ class MathExpressionParser {
         }
       }
     }
-    return {operator: op, index};
+    return {operator, index};
   }
 
   /**
