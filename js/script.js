@@ -102,12 +102,12 @@ class Calculator {
         this.clipboard.local = text;
         this.clipboard.permissions.read = true;
       })
-      .catch((err) => console.error("Failed to read clipboard: ", err));
+      .catch((e) => {});
 
     this.clipboard.user
       .writeText(this.clipboard.local)
       .then(() => (this.clipboard.permissions.write = true))
-      .catch((err) => console.error("Failed to write clipboard: ", err));
+      .catch((e) => {});
   }
 
   handleButtonClick(e) {
