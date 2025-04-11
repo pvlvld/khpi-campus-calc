@@ -636,7 +636,7 @@ document
     if (slider.style.display === "block") {
       slider.style.display = "none";
     } else {
-      slider.innerText = "Memory: " + (app.memory || 0);
+      slider.innerText = "Memory: " + (calculator.memory || 0);
       slider.style.display = "block";
     }
   });
