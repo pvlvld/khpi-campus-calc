@@ -596,8 +596,8 @@ function switchTab(tab) {
 }
 
 // === Ініціалізація
-const app = new Calculator();
-app.init();
+const calculator = new Calculator();
+calculator.init();
 
 // === Бургер
 document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
