@@ -595,63 +595,74 @@ function switchTab(tab) {
   }
 }
 
-// === Ініціалізація
-const calculator = new Calculator();
-calculator.init();
-
-// === Бургер
-document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
-  const sidebar = document.getElementById("sidebar");
-  sidebar?.classList.toggle("active");
-
-  // На десктопі — розширяємо трохи вправо
-  if (window.innerWidth > 768) {
-    if (sidebar?.classList.contains("active")) {
-      sidebar.style.width = "10rem";
-    } else {
-      sidebar ? (sidebar.style.width = "3rem") : null;
-    }
+class App {
+  constructor() {
+    this.calculator = new Calculator();
   }
-});
 
-// === Journal (адаптивно)
-document.getElementById("open-journal")?.addEventListener("click", (e) => {
-  e.stopPropagation();
-  const histMem = document.getElementById("hist-mem");
-  const isMobile = window.innerWidth <= 768;
+  init() {
+    this.calculator.init();
+    this.calculator.clearDisplay();
 
-  if (isMobile) {
-    histMem?.classList.toggle("active");
-  } else {
-    switchTab("history");
+    // UI
+    // Sidebar
+    document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
+      const sidebar = document.getElementById("sidebar");
+      sidebar?.classList.toggle("active");
+
+      // На десктопі — розширяємо трохи вправо
+      if (window.innerWidth > 768) {
+        if (sidebar?.classList.contains("active")) {
+          sidebar.style.width = "10rem";
+        } else {
+          sidebar ? (sidebar.style.width = "3rem") : null;
+        }
+      }
+    });
+
+    // Sidebar close on click outside
+    document.addEventListener("click", (e) => {
+      const sidebar = document.getElementById("sidebar");
+      const toggleBtn = document.getElementById("sidebar-toggle");
+      if (
+        toggleBtn &&
+        sidebar &&
+        !sidebar?.contains(e.target) &&
+        !toggleBtn.contains(e.target)
+      ) {
+        sidebar.classList.remove("active");
+        sidebar.style.width = "3rem";
+      }
+    });
+
+    // History / Memory
+    document.getElementById("open-journal")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const histMem = document.getElementById("hist-mem");
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        histMem?.classList.toggle("active");
+      } else {
+        switchTab("history");
+      }
+    });
+
+    // Memory controls
+    document
+      .getElementById("toggle-memory-slider")
+      ?.addEventListener("click", () => {
+        const slider = document.getElementById("memory-slider");
+        if (!slider) throw new Error("Memory slider not found");
+        if (slider.style.display === "block") {
+          slider.style.display = "none";
+        } else {
+          slider.innerText = "Memory: " + (calculator.memory || 0);
+          slider.style.display = "block";
+        }
+      });
   }
-});
+}
 
-// === Memory Slider (Mv)
-document
-  .getElementById("toggle-memory-slider")
-  ?.addEventListener("click", () => {
-    const slider = document.getElementById("memory-slider");
-    if (!slider) throw new Error("Memory slider not found");
-    if (slider.style.display === "block") {
-      slider.style.display = "none";
-    } else {
-      slider.innerText = "Memory: " + (calculator.memory || 0);
-      slider.style.display = "block";
-    }
-  });
-
-// Close slider on click outside
-document.addEventListener("click", (e) => {
-  const sidebar = document.getElementById("sidebar");
-  const toggleBtn = document.getElementById("sidebar-toggle");
-  if (
-    toggleBtn &&
-    sidebar &&
-    !sidebar?.contains(e.target) &&
-    !toggleBtn.contains(e.target)
-  ) {
-    sidebar.classList.remove("active");
-    sidebar.style.width = "3rem";
-  }
-});
+const app = new App();
+app.init();
