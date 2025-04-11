@@ -536,10 +536,10 @@ class MathExpressionParser {
    * @returns {{operator: string | null, index: number}}
    */
   findLowestPriorityOperator(exp) {
-    let lowest = Infinity,
-      index = -1,
-      op = null,
-      depth = 0;
+    let lowest = Infinity;
+    let index = -1;
+    let operator = null;
+    let depth = 0;
     for (let i = exp.length - 1; i >= 0; i--) {
       const char = exp[i];
       if (char === ")") depth++;
@@ -558,7 +558,7 @@ class MathExpressionParser {
         if (this.priority[char] <= lowest) {
           lowest = this.priority[char];
           index = i;
-          op = char;
+          operator = char;
         }
       }
     }
