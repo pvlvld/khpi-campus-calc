@@ -63,20 +63,6 @@ class Calculator {
       }
     });
 
-    document.addEventListener("keydown", (e) => {
-      switch (true) {
-        case e.key === "Enter":
-          e.preventDefault();
-          this.updateDisplay(undefined, this.calculateExpression());
-          break;
-        case e.ctrlKey && ["A", "a", "ф", "Ф"].includes(e.key):
-          e.preventDefault();
-          break;
-        default:
-          break;
-      }
-    });
-
     this.ui.buttons.forEach((button) => {
       button.addEventListener("click", (e) => this.handleButtonClick(e));
     });
