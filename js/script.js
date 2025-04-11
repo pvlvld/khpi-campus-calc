@@ -622,6 +622,7 @@ class App {
       const sidebar = document.getElementById("sidebar");
       const toggleBtn = document.getElementById("sidebar-toggle");
       if (
+        e.target instanceof Node &&
         toggleBtn &&
         sidebar &&
         !sidebar?.contains(e.target) &&
@@ -630,6 +631,9 @@ class App {
         sidebar.classList.remove("active");
         sidebar.style.width = "3rem";
       }
+      // at least i tried
+      e.preventDefault();
+      e.stopPropagation();
     });
 
     // History / Memory
@@ -654,7 +658,7 @@ class App {
         if (slider.style.display === "block") {
           slider.style.display = "none";
         } else {
-          slider.innerText = "Memory: " + (calculator.memory || 0);
+          slider.innerText = "Memory: " + (this.calculator.memory || 0);
           slider.style.display = "block";
         }
       });
