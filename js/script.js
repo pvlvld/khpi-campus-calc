@@ -678,15 +678,31 @@ class App {
         this.converter.ui.input.focus();
       }
     });
+
+    this.setupHistMemButton();
+  }
+
+  setupHistMemButton() {
+    document.getElementById("open-journal")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const histMem = document.getElementById("hist-mem");
+      const isMobile = window.innerWidth <= 768;
+
+      if (isMobile) {
+        histMem?.classList.toggle("active");
+      } else {
+        this.calculator.switchTab("history");
+      }
+    });
   }
 
   toggleMobileButtons() {
-    const container = document.getElementById('mobile-only-buttons');
+    const container = document.getElementById("mobile-only-buttons");
     if (this.activeTab === "Calculator") {
       container.innerHTML = `
-        <button id="open-journal">Journal</button>
-        <button id="toggle-memory-slider">Mv</button>
+        <button id="open-journal">History / Memory</button>
       `;
+      this.setupHistMemButton();
     } else {
       container.innerHTML = "";
     }
