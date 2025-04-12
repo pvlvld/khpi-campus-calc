@@ -503,9 +503,11 @@ select option {
 
   &:before {
     z-index: 1;
+    pointer-events: none;
   }
 
   &:after {
+    pointer-events: none;
     opacity: 0;
     z-index: 2;
     transition: opacity 0.4s ease;
