@@ -824,8 +824,8 @@ class Converter {
         this.ui.input.value = "";
         this.ui.convertFrom.innerText = "0";
         this.ui.convertTo.innerText = "0";
-        updateSelectedModeStyle.bind(this)();
         this.switchLayout(e.target.innerText);
+        updateSelectedModeStyle.bind(this)();
       });
     });
     updateSelectedModeStyle.bind(this)();
