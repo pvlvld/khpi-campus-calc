@@ -170,11 +170,20 @@ class Calculator {
         break;
 
       case value === "C":
-      case value === "CE":
         if (this.overwriteInput) {
           this.currentInput = value;
         }
         this.clearDisplay();
+        break;
+      case value === "CE":
+          while (
+            this.currentInput.length > 2 &&
+            /\d/.test(this.currentInput.at(-1) || "")
+          ) {
+            console.log(this.currentInput.at(-1));
+            this.currentInput = this.currentInput.slice(0, -1);
+          }
+          this.updateDisplay(undefined, this.currentInput);
         break;
 
       case value === "←":
