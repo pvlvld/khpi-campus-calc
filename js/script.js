@@ -645,19 +645,6 @@ class App {
       e.stopPropagation();
     });
 
-    // History / Memory
-    document.getElementById("open-journal")?.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const histMem = document.getElementById("hist-mem");
-      const isMobile = window.innerWidth <= 768;
-
-      if (isMobile) {
-        histMem?.classList.toggle("active");
-      } else {
-        this.calculator.switchTab("history");
-      }
-    });
-
     // Switch between calculator and converter
     document.querySelectorAll(".mode-button").forEach((btn) => {
       btn.addEventListener("click", (e) => {
@@ -729,7 +716,6 @@ class App {
     this.activeTab = tab;
     this.toggleMobileButtons();
   }
-
 }
 
 class Converter {
