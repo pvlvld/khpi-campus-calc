@@ -610,8 +610,6 @@ class App {
     this.converter.init();
     this.calculator.clearDisplay();
 
-    this.switchScreen("Converter");
-
     // UI
     // Sidebar
     document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
