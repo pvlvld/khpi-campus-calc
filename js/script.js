@@ -176,14 +176,17 @@ class Calculator {
         this.clearDisplay();
         break;
       case value === "CE":
-          while (
-            this.currentInput.length > 2 &&
-            /\d/.test(this.currentInput.at(-1) || "")
-          ) {
-            console.log(this.currentInput.at(-1));
-            this.currentInput = this.currentInput.slice(0, -1);
-          }
-          this.updateDisplay(undefined, this.currentInput);
+        if (!/\d/.test(this.currentInput.at(-1) || "")) {
+          this.currentInput = this.currentInput.slice(0, -1);
+        }
+        while (
+          this.currentInput.length > 0 &&
+          /\d/.test(this.currentInput.at(-1) || "")
+        ) {
+          this.currentInput = this.currentInput.slice(0, -1);
+        }
+
+        this.updateDisplay(undefined, this.currentInput);
         break;
 
       case value === "←":
