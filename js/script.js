@@ -40,7 +40,7 @@ class Calculator {
       ),
       memory: /** @type {HTMLElement} */ (
         document.getElementById("memory-content")
-      ),
+      )
     };
     this.ui.templates.historyItem.classList.add("history-item");
 
@@ -83,6 +83,20 @@ class Calculator {
         this.switchTab(e);
       });
     });
+  }
+
+  handleKeyPress(e) {
+    switch (true) {
+      case e.key === "Enter":
+        e.preventDefault();
+        this.updateDisplay(undefined, this.calculateExpression());
+        break;
+      case e.ctrlKey && ["A", "a", "ф", "Ф"].includes(e.key):
+        e.preventDefault();
+        break;
+      default:
+        break;
+    }
   }
 
   switchTab(e) {
