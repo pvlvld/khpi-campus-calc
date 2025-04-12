@@ -172,6 +172,7 @@ select option {
 }
 
 #keyboard-standart .btn {
+  position: relative;
   font-size: clamp(1.2rem, 2vw, 2rem);
   font-weight: bold;
   text-align: center;
@@ -474,5 +475,43 @@ select option {
   #memory-slider {
     font-size: 1.2rem;
     padding: 8px;
+  }
+}
+
+/* https://codepen.io/davidkpiano/pen/gOoNZNe */
+.cursor-glow:hover {
+  --x-px: calc(var(--x) * 1px);
+  --y-px: calc(var(--y) * 1px);
+  overflow: hidden;
+
+  &:before,
+  &:after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    inset: 0px;
+    background: radial-gradient(
+      600px circle at var(--x-px) var(--y-px),
+      rgba(175, 175, 175, 0.3),
+      transparent 40%
+    );
+  }
+
+  &:before {
+    z-index: 1;
+  }
+
+  &:after {
+    opacity: 0;
+    z-index: 2;
+    transition: opacity 0.4s ease;
+  }
+
+  &:hover:after {
+    opacity: 1;
   }
 }
