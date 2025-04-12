@@ -3,13 +3,17 @@
 
 const DEBUG = true;
 
-const FUNCTIONS = ["√", "^", "!", "%", "\\/", "\\*"];
+const FUNCTIONS = ["√", "^", "!", "%", "/", "*"];
 const REPLACEMENTS = {",": "."};
 
+function escapeRegex(str) {
+  return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&");
+}
+
+const ESCAPED_FUNCTIONS = FUNCTIONS.map(escapeRegex).join("|");
+
 const VALID_EXPRESSION_REGEX = new RegExp(
-  `^([+\\-*/^(),!]|(?:\\d+(?:\\[.|,]\\d+)?|\\[.|,]\\d+)|${FUNCTIONS.join(
-    "|"
-  )})+$`
+  `^([+\\-*/^(),]|(?:\\d+(?:[.,]\\d+)?|[.,]\\d+)|${ESCAPED_FUNCTIONS})+$`
 );
 
 class Calculator {
@@ -55,20 +59,16 @@ class Calculator {
     // Keyboard buttons glow animation
     const keyboard = document.getElementById("keyboard-standart");
     const keyboardButtons = keyboard?.children;
-    
+
     keyboard.addEventListener("pointermove", (ev) => {
       for (const featureEl of keyboardButtons) {
         const rect = featureEl.getBoundingClientRect();
-    
-        // Set the position for the glow effect
         featureEl.style.setProperty("--x", ev.clientX - rect.left);
         featureEl.style.setProperty("--y", ev.clientY - rect.top);
-    
-        // Apply the glow effect on pointermove
         featureEl.classList.add("cursor-glow");
       }
     });
-    
+
     keyboard.addEventListener("pointerleave", () => {
       // Remove the glow effect when the pointer leaves
       for (const featureEl of keyboardButtons) {
