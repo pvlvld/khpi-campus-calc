@@ -776,21 +776,11 @@ class Converter {
 
   init() {
     this.ui.selectFrom.addEventListener("change", () => {
-      this.convert(
-        this.ui.input,
-        this.ui.selectFrom,
-        this.ui.selectTo,
-        this.ui.convertTo
-      );
+      this.convert(this.ui.input);
     });
 
     this.ui.selectTo.addEventListener("change", () => {
-      this.convert(
-        this.ui.input,
-        this.ui.selectFrom,
-        this.ui.selectTo,
-        this.ui.convertTo
-      );
+      this.convert(this.ui.input);
     });
 
     this.ui.input.addEventListener("input", (e) => {
@@ -815,16 +805,9 @@ class Converter {
         this.ui.convertFrom.innerText = e.target.value;
       }
 
-      this.convert(
-        e.target,
-        this.ui.selectFrom,
-        this.ui.selectTo,
-        this.ui.convertTo
-      );
+      this.convert(e.target);
     });
 
-
-    
     const modes = document.getElementById("conversion-modes");
 
     function updateSelectedModeStyle() {
@@ -838,24 +821,23 @@ class Converter {
 
     modes.childNodes.forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        this.switchLayout(e.target.innerText);
         this.ui.input.value = "";
         this.ui.convertFrom.innerText = "0";
         this.ui.convertTo.innerText = "0";
         updateSelectedModeStyle.bind(this)();
+        this.switchLayout(e.target.innerText);
       });
     });
-    this.switchLayout(this.layout);
     updateSelectedModeStyle.bind(this)();
+    this.switchLayout(this.layout);
   }
 
-  convert(input, from, to, output) {
-    const value = parseFloat(input.value || "0");
-
-    const fromUnit = from.value;
-    const toUnit = to.value;
-    let result = this.convertUnits(value, fromUnit, toUnit);
-    output.innerText = result.toFixed(2);
+  convert(input) {
+    return (this.ui.convertTo.innerText = this.convertUnits(
+      parseFloat(input.value || "0"),
+      this.ui.selectFrom.value,
+      this.ui.selectTo.value
+    ).toFixed(2));
   }
 
   convertUnits(value, fromUnit, toUnit) {
@@ -891,12 +873,7 @@ class Converter {
       this.ui.selectTo.appendChild(optionTo);
     });
 
-    this.convert(
-      this.ui.input,
-      this.ui.selectFrom,
-      this.ui.selectTo,
-      this.ui.convertTo
-    );
+    this.convert(this.ui.input);
   }
 }
 
