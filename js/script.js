@@ -853,7 +853,7 @@ class Converter {
       parseFloat(input.value || "0"),
       this.ui.selectFrom.value,
       this.ui.selectTo.value
-    ).toFixed(2));
+    ).toFixed(3));
   }
 
   convertUnits(value, fromUnit, toUnit) {
