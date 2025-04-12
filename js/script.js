@@ -610,6 +610,8 @@ class App {
     this.converter.init();
     this.calculator.clearDisplay();
 
+    this.switchScreen("Converter");
+
     // UI
     // Sidebar
     document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
@@ -680,6 +682,18 @@ class App {
     });
   }
 
+  toggleMobileButtons() {
+    const container = document.getElementById('mobile-only-buttons');
+    if (this.activeTab === "Calculator") {
+      container.innerHTML = `
+        <button id="open-journal">Journal</button>
+        <button id="toggle-memory-slider">Mv</button>
+      `;
+    } else {
+      container.innerHTML = "";
+    }
+  }
+
   /**
    *
    * @param {"Calculator" | "Converter"} tab
@@ -699,7 +713,9 @@ class App {
       calc.style.display = "flex";
     }
     this.activeTab = tab;
+    this.toggleMobileButtons();
   }
+
 }
 
 class Converter {
