@@ -675,7 +675,7 @@ class App {
       if (this.activeTab === "Calculator") {
         this.calculator.handleKeyPress(e);
       } else {
-        this.converter.ui.inputFrom.focus();
+        this.converter.ui.input.focus();
       }
     });
   }
@@ -707,13 +707,10 @@ class Converter {
     /**
      * @type {"Length" | "Weight" | "Temperature"}
      */
-    this.layout = "Length";
+    this.layout = "Temperature";
     this.ui = {
-      inputFrom: /** @type {HTMLInputElement} */ (
+      input: /** @type {HTMLInputElement} */ (
         document.getElementById("converter-input-from")
-      ),
-      inputTo: /** @type {HTMLInputElement} */ (
-        document.getElementById("converter-input-to")
       ),
       selectFrom: /** @type {HTMLSelectElement} */ (
         document.getElementById("converter-select-from")
@@ -721,45 +718,82 @@ class Converter {
       selectTo: /** @type {HTMLSelectElement} */ (
         document.getElementById("converter-select-to")
       ),
-      convertFrom: /** @type {HTMLButtonElement} */ (
+      convertFrom: /** @type {HTMLDivElement} */ (
         document.getElementById("converter-convert-from")
       ),
-      convertTo: /** @type {HTMLButtonElement} */ (
+      convertTo: /** @type {HTMLDivElement} */ (
         document.getElementById("converter-convert-to")
       )
     };
 
     this.conversionRates = {
       Length: {
-        m: 1,
-        km: 0.001,
-        cm: 100,
-        mm: 1000,
-        ft: 3.28084,
-        in: 39.3701
+        fromBase: {
+          m: (value) => value,
+          km: (value) => value / 1000,
+          cm: (value) => value * 100,
+          mm: (value) => value * 1000,
+          ft: (value) => value * 3.28084,
+          in: (value) => value * 39.3701
+        },
+        toBase: {
+          m: (value) => value,
+          km: (value) => value * 1000,
+          cm: (value) => value / 100,
+          mm: (value) => value / 1000,
+          ft: (value) => value / 3.28084,
+          in: (value) => value / 39.3701
+        }
       },
       Weight: {
-        kg: 1,
-        g: 1000,
-        lb: 2.20462,
-        oz: 35.274
+        fromBase: {
+          kg: (value) => value,
+          g: (value) => value * 1000,
+          lb: (value) => value * 2.20462,
+          oz: (value) => value * 35.274
+        },
+        toBase: {
+          kg: (value) => value,
+          g: (value) => value / 1000,
+          lb: (value) => value / 2.20462,
+          oz: (value) => value / 35.274
+        }
       },
       Temperature: {
-        C: (value) => +value,
-        F: (value) => (value - 32) * (5 / 9),
-        K: (value) => +value + 273.15
+        fromBase: {
+          C: (value) => value,
+          F: (value) => (value * 9) / 5 + 32,
+          K: (value) => value + 273.15
+        },
+        toBase: {
+          C: (value) => value,
+          F: (value) => ((value - 32) * 5) / 9,
+          K: (value) => value - 273.15
+        }
       }
     };
   }
 
   init() {
     this.ui.selectFrom.addEventListener("change", () => {
-      this.convert(this.ui.inputFrom, this.ui.selectFrom, this.ui.selectTo);
+      this.convert(
+        this.ui.input,
+        this.ui.selectFrom,
+        this.ui.selectTo,
+        this.ui.convertTo
+      );
     });
+
     this.ui.selectTo.addEventListener("change", () => {
-      this.convert(this.ui.inputTo, this.ui.selectTo, this.ui.selectFrom);
+      this.convert(
+        this.ui.input,
+        this.ui.selectFrom,
+        this.ui.selectTo,
+        this.ui.convertTo
+      );
     });
-    this.ui.inputFrom.addEventListener("input", (e) => {
+
+    this.ui.input.addEventListener("input", (e) => {
       let currentValue = e.target.value || "0";
       const isNegative = currentValue.startsWith("-");
 
@@ -769,51 +803,80 @@ class Converter {
       }
 
       if (currentValue === "0" || currentValue === "-0") {
-        return void (this.ui.convertFrom.innerText = currentValue);
+        void (this.ui.convertFrom.innerText = currentValue);
+      } else {
+        if (/^-?0\d+/.test(currentValue)) {
+          let cleanValue = currentValue.replace(/^-?0+/, "") || "0";
+          e.target.value = isNegative
+            ? -Math.abs(cleanValue)
+            : Math.abs(cleanValue);
+        }
+
+        this.ui.convertFrom.innerText = e.target.value;
       }
 
-      if (/^-?0\d+/.test(currentValue)) {
-        let cleanValue = currentValue.replace(/^-?0+/, "") || "0";
-        e.target.value = isNegative ? -Math.abs(cleanValue) : cleanValue;
-      }
-
-      this.ui.convertFrom.innerText = e.target.value;
+      this.convert(
+        e.target,
+        this.ui.selectFrom,
+        this.ui.selectTo,
+        this.ui.convertTo
+      );
     });
-  }
 
-  convert(input, from, to) {
-    const value = parseFloat(input.value);
-    if (isNaN(value)) {
-      input.value = "";
-      return;
+
+    
+    const modes = document.getElementById("conversion-modes");
+
+    function updateSelectedModeStyle() {
+      Array.from(modes.children).forEach((btn) => {
+        btn.classList.remove("active");
+        if (btn.innerText === this.layout) {
+          btn.classList.add("active");
+        }
+      });
     }
 
-    const fromUnit = from.options[from.selectedIndex].value;
-    const toUnit = to.options[to.selectedIndex].value;
+    modes.childNodes.forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        this.switchLayout(e.target.innerText);
+        this.ui.input.value = "";
+        this.ui.convertFrom.innerText = "0";
+        this.ui.convertTo.innerText = "0";
+        updateSelectedModeStyle.bind(this)();
+      });
+    });
+    this.switchLayout(this.layout);
+    updateSelectedModeStyle.bind(this)();
+  }
 
+  convert(input, from, to, output) {
+    const value = parseFloat(input.value || "0");
+
+    const fromUnit = from.value;
+    const toUnit = to.value;
     let result = this.convertUnits(value, fromUnit, toUnit);
-    to.value = result.toFixed(2);
+    output.innerText = result.toFixed(2);
   }
 
   convertUnits(value, fromUnit, toUnit) {
-    if (this.layout === "Temperature") {
-      return this.conversionRates[this.layout][toUnit](
-        this.conversionRates[this.layout][fromUnit](value)
-      );
-    }
+    if (fromUnit === toUnit) return value;
 
-    return (
-      (value * this.conversionRates[this.layout][fromUnit]) /
-      this.conversionRates[this.layout][toUnit]
-    );
+    const toBase = this.conversionRates[this.layout].toBase[fromUnit](value);
+    return this.conversionRates[this.layout].fromBase[toUnit](toBase);
   }
 
   switchLayout(layout) {
+    if (!this.conversionRates[layout]) {
+      throw new Error(`Unexpected layout: ${layout}`);
+    }
     this.layout = layout;
+
     this.ui.selectFrom.innerHTML = "";
     this.ui.selectTo.innerHTML = "";
 
-    Object.keys(this.conversionRates[layout]).forEach((unit) => {
+    const units = Object.keys(this.conversionRates[this.layout].fromBase);
+
+    units.forEach((unit, index) => {
       const optionFrom = document.createElement("option");
       optionFrom.value = unit;
       optionFrom.textContent = unit;
@@ -822,8 +885,18 @@ class Converter {
       const optionTo = document.createElement("option");
       optionTo.value = unit;
       optionTo.textContent = unit;
+
+      if (index === 1) optionTo.selected = true;
+
       this.ui.selectTo.appendChild(optionTo);
     });
+
+    this.convert(
+      this.ui.input,
+      this.ui.selectFrom,
+      this.ui.selectTo,
+      this.ui.convertTo
+    );
   }
 }
 

@@ -35,8 +35,37 @@ body {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 90px 60px;
+  padding: 90px 15vw;
   height: 100%;
+}
+
+#conversion-modes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 2.2rem;
+  font-weight: bold;
+  & * {
+    color: var(--color-inactive-font);
+    cursor: pointer;
+    position: relative;
+  }
+}
+
+#conversion-modes > div.active {
+  color: white;
+  scale: 1.1;
+}
+
+#conversion-modes > div.active::after {
+  content: "";
+  position: absolute;
+  left: -0.5rem;
+  height: 2.2rem;
+  width: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
 }
 
 #conversion-display {
@@ -46,10 +75,15 @@ body {
   & > .converter-item {
     display: flex;
     flex-direction: column;
+    font-size: 3rem;
+    font-weight: bold;
+    & select {
+      font-size: 1.5rem;
+    }
   }
 }
 
-#converter-input-from, #converter-input-to {
+#converter-input-from {
   z-index: -1;
   position: absolute;
   top: -999px;
