@@ -289,6 +289,9 @@ select option {
 #sidebar-toggle {
   font-size: 2rem;
   cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
   position: absolute;
   z-index: 4;
