@@ -228,7 +228,7 @@ class Calculator {
         }
         break;
 
-        case ["M+", "M-", "MC", "MR", "MS"].includes(value):
+      case ["M+", "M-", "MC", "MR", "MS"].includes(value):
         this.handleMemoryControl(value);
         break;
 
