@@ -1,4 +1,4 @@
-import { CONVERSION_RATES } from "./consts";
+import { CONVERSION_RATES } from "./consts.js";
 
 export class Converter {
   constructor() {
