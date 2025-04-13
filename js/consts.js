@@ -23,7 +23,7 @@ const CONFIG = {
 
 const CONVERSION_RATES = {
   Length: {
-    icon: `<i class="fa-solid fa-ruler"></i>`,
+    icon: `<i class="fa-solid fa-ruler" data-c="Length" ></i>`,
     fromBase: {
       m: (value) => value,
       km: (value) => value / 1000,
@@ -42,7 +42,7 @@ const CONVERSION_RATES = {
     }
   },
   Weight: {
-    icon: `<i class="fa-solid fa-weight-scale"></i>`,
+    icon: `<i class="fa-solid fa-weight-scale" data-c="Weight"></i>`,
     fromBase: {
       kg: (value) => value,
       g: (value) => value * 1000,
@@ -57,7 +57,7 @@ const CONVERSION_RATES = {
     }
   },
   Temperature: {
-    icon: `<i class="fa-solid fa-temperature-half"></i>`,
+    icon: `<i class="fa-solid fa-temperature-half" data-c="Temperature"></i>`,
     fromBase: {
       C: (value) => value,
       F: (value) => (value * 9) / 5 + 32,
@@ -70,7 +70,7 @@ const CONVERSION_RATES = {
     }
   },
   Area: {
-    icon: `<i class="fa-solid fa-square"></i>`,
+    icon: `<i class="fa-solid fa-square" data-c="Area"></i>`,
     fromBase: {
       m2: (value) => value,
       km2: (value) => value / 1000000,
@@ -93,7 +93,7 @@ const CONVERSION_RATES = {
     }
   },
   Speed: {
-    icon: `<i class="fa-solid fa-gauge"></i>`,
+    icon: `<i class="fa-solid fa-gauge" data-c="Speed"></i>`,
     fromBase: {
       mps: (value) => value,
       kph: (value) => value * 3.6,
@@ -110,7 +110,7 @@ const CONVERSION_RATES = {
     }
   },
   Time: {
-    icon: `<i class="fa-solid fa-clock"></i>`,
+    icon: `<i class="fa-solid fa-clock" data-c="Time"></i>`,
     fromBase: {
       s: (value) => value,
       min: (value) => value / 60,
@@ -131,7 +131,7 @@ const CONVERSION_RATES = {
     }
   },
   Angle: {
-    icon: `<i class="fa-solid fa-angle-right"></i>`,
+    icon: `<i class="fa-solid fa-angle-right" data-c="Angle"></i>`,
     fromBase: {
       rad: (value) => value,
       deg: (value) => value * (180 / Math.PI),
@@ -144,7 +144,7 @@ const CONVERSION_RATES = {
     }
   },
   Data: {
-    icon: `<i class="fa-solid fa-database"></i>`,
+    icon: `<i class="fa-solid fa-database" data-c="Data"></i>`,
     fromBase: {
       bit: (value) => value,
       byte: (value) => value / 8,
@@ -187,7 +187,7 @@ const CONVERSION_RATES = {
     }
   },
   Energy: {
-    icon: `<i class="fa-solid fa-bolt"></i>`,
+    icon: `<i class="fa-solid fa-bolt" data-c="Energy"></i>`,
     fromBase: {
       J: (value) => value,
       kJ: (value) => value / 1000,
@@ -212,7 +212,7 @@ const CONVERSION_RATES = {
     }
   },
   Volume: {
-    icon: `<i class="fa-solid fa-cube"></i>`,
+    icon: `<i class="fa-solid fa-cube" data-c="Volume"></i>`,
     fromBase: {
       m3: (value) => value,
       L: (value) => value * 1000,

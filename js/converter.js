@@ -99,7 +99,10 @@ export class Converter {
           this.ui.convertTo.innerText = "0";
         }
         //@ts-expect-error
-        this.switchLayout(e.target.innerText);
+        const dataCValue = e.target.getAttribute('data-c');
+        //@ts-expect-error
+        const layout = dataCValue || e.target?.innerText;
+        this.switchLayout(layout);
         updateSelectedModeStyle.bind(this)();
       });
     });
