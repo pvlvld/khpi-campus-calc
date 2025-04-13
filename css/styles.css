@@ -360,6 +360,7 @@ select option {
     left: 1.8rem;
     height: 1.1rem;
     width: 2px;
+    background-color: var(--color-accent);
   }
 }
 
