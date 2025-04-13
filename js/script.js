@@ -837,6 +837,64 @@ class Converter {
           F: (value) => ((value - 32) * 5) / 9,
           K: (value) => value - 273.15
         }
+      },
+      Area: {
+        fromBase: {
+          m2: (value) => value,
+          km2: (value) => value / 1000000,
+          cm2: (value) => value * 10000,
+          mm2: (value) => value * 1000000,
+          ft2: (value) => value * 10.7639,
+          in2: (value) => value * 1550.0031,
+          acre: (value) => value / 4046.8564,
+          ha: (value) => value / 10000
+        },
+        toBase: {
+          m2: (value) => value,
+          km2: (value) => value * 1000000,
+          cm2: (value) => value / 10000,
+          mm2: (value) => value / 1000000,
+          ft2: (value) => value / 10.7639,
+          in2: (value) => value / 1550.0031,
+          acre: (value) => value * 4046.8564,
+          ha: (value) => value * 10000
+        }
+      },
+      Speed: {
+        fromBase: {
+          mps: (value) => value,
+          kph: (value) => value * 3.6,
+          mph: (value) => value * 2.23694,
+          knot: (value) => value * 1.94384,
+          fts: (value) => value * 3.28084
+        },
+        toBase: {
+          mps: (value) => value,
+          kph: (value) => value / 3.6,
+          mph: (value) => value / 2.23694,
+          knot: (value) => value / 1.94384,
+          fts: (value) => value / 3.28084
+        }
+      },
+      Time: {
+        fromBase: {
+          s: (value) => value,
+          min: (value) => value / 60,
+          h: (value) => value / 3600,
+          day: (value) => value / 86400,
+          week: (value) => value / 604800,
+          month: (value) => value / 2592000, // Approximated as 30 days
+          year: (value) => value / 31536000 // Approximated as 365 days
+        },
+        toBase: {
+          s: (value) => value,
+          min: (value) => value * 60,
+          h: (value) => value * 3600,
+          day: (value) => value * 86400,
+          week: (value) => value * 604800,
+          month: (value) => value * 2592000, // Approximated as 30 days
+          year: (value) => value * 31536000 // Approximated as 365 days
+        }
       }
     };
   }
@@ -874,6 +932,12 @@ class Converter {
     });
 
     const modes = document.getElementById("conversion-modes");
+
+    Object.keys(this.conversionRates).forEach((key) => {
+      const button = document.createElement("div");
+      button.innerText = key;
+      modes.appendChild(button);
+    });
 
     function updateSelectedModeStyle() {
       Array.from(modes.children).forEach((btn) => {
