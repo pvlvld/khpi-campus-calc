@@ -193,6 +193,48 @@ const CONVERSION_RATES = {
       Wh: (value) => value * 3600,
       kWh: (value) => value * 3600000
     }
+  },
+  Volume: {
+    fromBase: {
+      m3: (value) => value,
+      L: (value) => value * 1000,
+      mL: (value) => value * 1000000,
+      cm3: (value) => value * 1000000,
+      mm3: (value) => value * 1000000000,
+      ft3: (value) => value * 35.3147,
+      in3: (value) => value * 61023.7,
+      gal_us: (value) => value * 264.172,
+      gal_uk: (value) => value * 219.969,
+      qt_us: (value) => value * 1056.69,
+      qt_uk: (value) => value * 879.877,
+      pt_us: (value) => value * 2113.38,
+      pt_uk: (value) => value * 1759.75,
+      floz_us: (value) => value * 33814,
+      floz_uk: (value) => value * 35195.1,
+      cup: (value) => value * 4226.75,
+      tbsp: (value) => value * 67628,
+      tsp: (value) => value * 202884
+    },
+    toBase: {
+      m3: (value) => value,
+      L: (value) => value / 1000,
+      mL: (value) => value / 1000000,
+      cm3: (value) => value / 1000000,
+      mm3: (value) => value / 1000000000,
+      ft3: (value) => value / 35.3147,
+      in3: (value) => value / 61023.7,
+      gal_us: (value) => value / 264.172,
+      gal_uk: (value) => value / 219.969,
+      qt_us: (value) => value / 1056.69,
+      qt_uk: (value) => value / 879.877,
+      pt_us: (value) => value / 2113.38,
+      pt_uk: (value) => value / 1759.75,
+      floz_us: (value) => value / 33814,
+      floz_uk: (value) => value / 35195.1,
+      cup: (value) => value / 4226.75,
+      tbsp: (value) => value / 67628,
+      tsp: (value) => value / 202884
+    }
   }
 };
 
