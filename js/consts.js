@@ -169,6 +169,30 @@ const CONVERSION_RATES = {
       YB: (value) => value * 8 * 1000000000000000000000000,
       YiB: (value) => value * 8 * 1208925819614629174706176
     }
+  },
+  Energy: {
+    fromBase: {
+      J: (value) => value,
+      kJ: (value) => value / 1000,
+      eV: (value) => value / 1.602176634e-19,
+      cal: (value) => value / 4.184,
+      kcal: (value) => value / 4184,
+      ftlb: (value) => value / 1.3558179483314,
+      BTU: (value) => value / 1055.06,
+      Wh: (value) => value / 3600,
+      kWh: (value) => value / 3600000
+    },
+    toBase: {
+      J: (value) => value,
+      kJ: (value) => value * 1000,
+      eV: (value) => value * 1.602176634e-19,
+      cal: (value) => value * 4.184,
+      kcal: (value) => value * 4184,
+      ftlb: (value) => value * 1.3558179483314,
+      BTU: (value) => value * 1055.06,
+      Wh: (value) => value * 3600,
+      kWh: (value) => value * 3600000
+    }
   }
 };
 
