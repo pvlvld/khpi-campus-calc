@@ -895,6 +895,60 @@ class Converter {
           month: (value) => value * 2592000, // Approximated as 30 days
           year: (value) => value * 31536000 // Approximated as 365 days
         }
+      },
+      Angle: {
+        fromBase: {
+          rad: (value) => value,
+          deg: (value) => value * (180 / Math.PI),
+          grad: (value) => value * (200 / Math.PI)
+        },
+        toBase: {
+          rad: (value) => value,
+          deg: (value) => value * (Math.PI / 180),
+          grad: (value) => value * (Math.PI / 200)
+        }
+      },
+      Data: {
+        fromBase: {
+          bit: (value) => value,
+          byte: (value) => value / 8,
+          KB: (value) => value / 8 / 1000,
+          KiB: (value) => value / 8 / 1024,
+          MB: (value) => value / 8 / 1000000,
+          MiB: (value) => value / 8 / 1048576,
+          GB: (value) => value / 8 / 1000000000,
+          GiB: (value) => value / 8 / 1073741824,
+          TB: (value) => value / 8 / 1000000000000,
+          TiB: (value) => value / 8 / 1099511627776,
+          PB: (value) => value / 8 / 1000000000000000,
+          PiB: (value) => value / 8 / 1125899906842624,
+          EB: (value) => value / 8 / 1000000000000000000,
+          EiB: (value) => value / 8 / 1152921504606847000,
+          ZB: (value) => value / 8 / 1000000000000000000000,
+          ZiB: (value) => value / 8 / 1180591620717411303424,
+          YB: (value) => value / 8 / 1000000000000000000000000,
+          YiB: (value) => value / 8 / 1208925819614629174706176
+        },
+        toBase: {
+          bit: (value) => value,
+          byte: (value) => value * 8,
+          KB: (value) => value * 8 * 1000,
+          KiB: (value) => value * 8 * 1024,
+          MB: (value) => value * 8 * 1000000,
+          MiB: (value) => value * 8 * 1048576,
+          GB: (value) => value * 8 * 1000000000,
+          GiB: (value) => value * 8 * 1073741824,
+          TB: (value) => value * 8 * 1000000000000,
+          TiB: (value) => value * 8 * 1099511627776,
+          PB: (value) => value * 8 * 1000000000000000,
+          PiB: (value) => value * 8 * 1125899906842624,
+          EB: (value) => value * 8 * 1000000000000000000,
+          EiB: (value) => value * 8 * 1152921504606847000,
+          ZB: (value) => value * 8 * 1000000000000000000000,
+          ZiB: (value) => value * 8 * 1180591620717411303424,
+          YB: (value) => value * 8 * 1000000000000000000000000,
+          YiB: (value) => value * 8 * 1208925819614629174706176
+        }
       }
     };
   }
