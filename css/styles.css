@@ -284,7 +284,7 @@ select option {
   flex-direction: column;
   align-items: center;
   z-index: 3;
-  padding-top: 2rem;
+  padding-top: 3rem;
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
@@ -334,7 +334,6 @@ select option {
   display: none;
   flex-direction: column;
   gap: 0.5rem;
-  padding: 1rem 0.5rem;
   width: 100%;
 }
 
@@ -347,14 +346,13 @@ select option {
   border: none;
   color: white;
   padding: 6px 8px;
-  border-radius: 6px;
   font-size: 1rem;
   cursor: pointer;
   width: 100%;
 }
 
 .mode-button:hover {
-  background-color: var(--color-accent);
+  background-color: var(--color-brn-hover-default);
 }
 
 #mobile-only-buttons {
