@@ -43,13 +43,19 @@ export class Calculator {
 
     // Keyboard buttons glow animation
     const keyboard = document.getElementById("keyboard-standart");
-    const keyboardButtons = keyboard?.children;
+    const keyboardButtons = /** @type {NodeListOf<HTMLElement> | undefined} */ (
+      keyboard?.children
+    );
+
+    if (!keyboard || !keyboardButtons) {
+      throw new Error("Keyboard element not found");
+    }
 
     keyboard.addEventListener("pointermove", (ev) => {
       for (const featureEl of keyboardButtons) {
         const rect = featureEl.getBoundingClientRect();
-        featureEl.style.setProperty("--x", ev.clientX - rect.left);
-        featureEl.style.setProperty("--y", ev.clientY - rect.top);
+        featureEl.style.setProperty("--x", String(ev.clientX - rect.left));
+        featureEl.style.setProperty("--y", String(ev.clientY - rect.top));
         featureEl.classList.add("cursor-glow");
       }
     });
