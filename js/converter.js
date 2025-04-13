@@ -41,6 +41,11 @@ export class Converter {
       if (typeof e.target?.value !== "string") return;
       let currentValue = e.target.value || "0";
 
+      if (currentValue.length > 15) {
+        e.target.value = currentValue.slice(0, 15);
+        return
+      };
+
       if (!/^-?\d*\.?\d*$/.test(currentValue)) {
         return void (e.target.value = this.ui.convertFrom.innerText);
       }
