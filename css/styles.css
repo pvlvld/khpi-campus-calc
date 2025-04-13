@@ -51,9 +51,15 @@ body {
   text-align: left;
   min-height: 100%;
   & * {
-    color: var(--color-inactive-font);
     cursor: pointer;
+    color: var(--color-inactive-font);
     position: relative;
+  }
+  & i {
+    padding-right: .5rem;
+  }
+  & > div.active > i {
+    color: var(--color-accent);
   }
 }
 

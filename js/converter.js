@@ -76,7 +76,7 @@ export class Converter {
     }
     Object.keys(this.conversionRates).forEach((key) => {
       const button = document.createElement("div");
-      button.innerText = key;
+      button.innerHTML = this.conversionRates[key].icon + key;
       modes.appendChild(button);
     });
 
