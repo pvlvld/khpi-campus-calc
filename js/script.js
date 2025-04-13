@@ -92,13 +92,6 @@ class Calculator {
       button.addEventListener("click", (e) => this.handleButtonClick(e));
     });
 
-    document.querySelectorAll(".memory-control").forEach((btn) => {
-      btn.addEventListener("click", () =>
-        //@ts-expect-error
-        this.handleMemoryControl(btn.innerText)
-      );
-    });
-
     document.querySelectorAll(".hist-mem-tab").forEach((tab) => {
       tab.addEventListener("click", (e) => {
         document
@@ -233,6 +226,10 @@ class Calculator {
         } catch (e) {
           console.error("Invalid 1/x operation", e);
         }
+        break;
+
+        case ["M+", "M-", "MC", "MR", "MS"].includes(value):
+        this.handleMemoryControl(value);
         break;
 
       default:
