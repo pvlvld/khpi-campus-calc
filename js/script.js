@@ -4,7 +4,7 @@
 const DEBUG = true;
 
 const FUNCTIONS = ["√", "^", "!", "%", "/", "*"];
-const REPLACEMENTS = {",": "."};
+const REPLACEMENTS = {",": ".", s: "√"};
 
 function escapeRegex(str) {
   return str.replace(/[-[\]/{}()*+?.\\^$|]/g, "\\$&");
@@ -89,7 +89,10 @@ class Calculator {
     });
 
     this.ui.buttons.forEach((button) => {
-      button.addEventListener("click", (e) => this.handleButtonClick(e));
+      button.addEventListener("click", (e) =>
+        //@ts-expect-error
+        this.handleUserInput(e.target?.innerText ?? "")
+      );
     });
 
     document.querySelectorAll(".hist-mem-tab").forEach((tab) => {
@@ -113,6 +116,7 @@ class Calculator {
         e.preventDefault();
         break;
       default:
+        this.handleUserInput(e.key);
         break;
     }
   }
@@ -142,9 +146,10 @@ class Calculator {
       .catch((e) => {});
   }
 
-  handleButtonClick(e) {
-    const value = e.target.innerText;
-
+  handleUserInput(value) {
+    for (const [k, v] of Object.entries(REPLACEMENTS)) {
+      value = value.replace(new RegExp(`^${k}$`, "i"), v);
+    }
     switch (true) {
       case value === "=":
         try {
@@ -162,7 +167,7 @@ class Calculator {
         }
         break;
 
-      case value === "C":
+      case value === "C" || value === "Delete" || value === "Del":
         if (this.overwriteInput) {
           this.currentInput = value;
         }
@@ -182,7 +187,7 @@ class Calculator {
         this.updateDisplay(undefined, this.currentInput);
         break;
 
-      case value === "←":
+      case value === "←" || value === "Backspace":
         this.currentInput = this.currentInput.slice(0, -1) || "";
         this.ui.display.resultInput.innerHTML = this.currentInput || "0";
         break;
@@ -233,7 +238,7 @@ class Calculator {
         break;
 
       default:
-        console.error(`Unhandled button click: ${value}`);
+        if (DEBUG) console.error(`Unhandled button click: ${value}`);
         break;
     }
   }
@@ -637,6 +642,25 @@ class App {
      * @type {"Calculator" | "Converter"}
      */
     this.activeTab = "Calculator";
+
+    this.ui = {
+      sidebar: /** @type {HTMLElement} */ (document.getElementById("sidebar")),
+      sidebarButton: /** @type {HTMLElement} */ (
+        document.getElementById("sidebar-toggle")
+      ),
+      toggleSidebar: () => {
+        this.ui.sidebar.classList.toggle("active");
+
+        // На десктопі — розширяємо трохи вправо
+        if (window.innerWidth > 768) {
+          if (this.sidebar?.classList.contains("active")) {
+            this.sidebar.style.width = "10rem";
+          } else {
+            this.sidebar ? (this.sidebar.style.width = "") : null;
+          }
+        }
+      }
+    };
   }
 
   init() {
@@ -646,33 +670,21 @@ class App {
 
     // UI
     // Sidebar
-    document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
-      const sidebar = document.getElementById("sidebar");
-      sidebar?.classList.toggle("active");
-
-      // На десктопі — розширяємо трохи вправо
-      if (window.innerWidth > 768) {
-        if (sidebar?.classList.contains("active")) {
-          sidebar.style.width = "10rem";
-        } else {
-          sidebar ? (sidebar.style.width = "") : null;
-        }
-      }
-    });
+    this.ui.sidebarButton.addEventListener("click", () =>
+      this.ui.toggleSidebar()
+    );
 
     // Sidebar close on click outside
     document.addEventListener("click", (e) => {
-      const sidebar = document.getElementById("sidebar");
-      const toggleBtn = document.getElementById("sidebar-toggle");
       if (
         e.target instanceof Node &&
-        toggleBtn &&
-        sidebar &&
-        !sidebar?.contains(e.target) &&
-        !toggleBtn.contains(e.target)
+        this.ui.sidebarButton &&
+        this.ui.sidebar &&
+        !this.ui.sidebar?.contains(e.target) &&
+        !this.ui.sidebarButton.contains(e.target)
       ) {
-        sidebar.classList.remove("active");
-        sidebar.style.width = "";
+        this.ui.sidebar.classList.remove("active");
+        this.ui.sidebar.style.width = "";
       }
       // at least i tried
       e.preventDefault();
@@ -680,20 +692,25 @@ class App {
     });
 
     // Switch between calculator and converter
-    document.querySelectorAll(".mode-button").forEach((btn) => {
+    const modeButtons = document.querySelectorAll(".mode-button");
+    modeButtons.forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        if (
-          e.target instanceof HTMLButtonElement &&
-          e.target.innerText !== this.activeTab
-        ) {
-          // @ts-expect-error
-          this.switchScreen(e.target.innerText);
+        const target = e.target;
+        if (!(target instanceof HTMLButtonElement)) return;
+        if (target.innerText !== this.activeTab) {
+          //@ts-expect-error
+          this.switchScreen(target.innerText);
+          modeButtons.forEach((b) => b.classList.remove("active"));
+          target.classList.add("active");
         }
       });
     });
 
     document.addEventListener("keydown", (e) => {
       if (this.activeTab === "Calculator") {
+        if (e.key === "Escape") {
+          return this.ui.toggleSidebar();
+        }
         this.calculator.handleKeyPress(e);
       } else {
         this.converter.ui.input.focus();

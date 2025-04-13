@@ -68,6 +68,7 @@ body {
   border-radius: 1px;
 }
 
+
 #conversion-display {
   display: flex;
   flex-direction: column;
@@ -336,15 +337,29 @@ select option {
 .mode-button {
   background-color: var(--color-primary);
   border: none;
-  color: white;
+  color: var(--color-inactive-font);
   padding: 6px 8px;
-  font-size: 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
   cursor: pointer;
   width: 100%;
 }
 
 .mode-button:hover {
   background-color: var(--color-brn-hover-default);
+}
+
+.mode-button.active{
+  color: var(--color-font);
+  &::after {
+  content: "";
+  position: absolute;
+  left: 1.8rem;
+  height: 1.1rem;
+  width: 2px;
+  background: var(--color-accent);
+  border-radius: 1px;
+}
 }
 
 #mobile-only-buttons {
