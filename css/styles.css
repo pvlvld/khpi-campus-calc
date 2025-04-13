@@ -42,10 +42,14 @@ body {
 #conversion-modes {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 2rem;
+  padding: 1.5rem;
   font-size: 2.2rem;
   font-weight: bold;
+  overflow-y: auto;
+  overflow-x: hidden;
+  text-align: left;
+  min-height: 100%;
   & * {
     color: var(--color-inactive-font);
     cursor: pointer;
@@ -67,7 +71,6 @@ body {
   background: var(--color-accent);
   border-radius: 1px;
 }
-
 
 #conversion-display {
   display: flex;
