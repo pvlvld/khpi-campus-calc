@@ -90,9 +90,11 @@ export class Converter {
 
     modes.childNodes.forEach((btn) => {
       btn.addEventListener("click", (e) => {
-        this.ui.input.value = "";
-        this.ui.convertFrom.innerText = "0";
-        this.ui.convertTo.innerText = "0";
+        if (!CONFIG.preserveConverterInput) {
+          this.ui.input.value = "";
+          this.ui.convertFrom.innerText = "0";
+          this.ui.convertTo.innerText = "0";
+        }
         //@ts-expect-error
         this.switchLayout(e.target.innerText);
         updateSelectedModeStyle.bind(this)();

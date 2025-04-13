@@ -13,6 +13,14 @@ const VALID_EXPRESSION_REGEX = new RegExp(
   `^([+\\-*/^(),]|(?:\\d+(?:[.,]\\d+)?|[.,]\\d+)|${ESCAPED_FUNCTIONS})+$`
 );
 
+const CONFIG = {
+  limits: {
+    maxConverterInputLength: 15,
+    maxCalculatorInputLength: 120
+  },
+  preserveConverterInput: true,
+}
+
 const CONVERSION_RATES = {
   Length: {
     fromBase: {
@@ -243,5 +251,6 @@ export {
   FUNCTIONS,
   REPLACEMENTS,
   VALID_EXPRESSION_REGEX,
-  CONVERSION_RATES
+  CONVERSION_RATES,
+  CONFIG
 };
