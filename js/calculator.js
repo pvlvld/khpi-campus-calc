@@ -1,4 +1,4 @@
-import {DEBUG, REPLACEMENTS, VALID_EXPRESSION_REGEX} from "./consts.js";
+import {CONFIG, DEBUG, REPLACEMENTS, VALID_EXPRESSION_REGEX} from "./consts.js";
 import {MathExpressionParser} from "./mathHandler.js";
 
 export class Calculator {
@@ -143,8 +143,14 @@ export class Calculator {
     }
 
     const isDelAction = ["Delete", "Backspace", "←"].includes(value);
-    if (!isDelAction && this.currentInput.length >= 120) {
-      this.currentInput = this.currentInput.slice(0, 120);
+    if (
+      !isDelAction &&
+      this.currentInput.length >= CONFIG.limits.maxCalculatorInputLength
+    ) {
+      this.currentInput = this.currentInput.slice(
+        0,
+        CONFIG.limits.maxCalculatorInputLength
+      );
       this.ui.display.resultInput.innerHTML = this.currentInput;
       return;
     }

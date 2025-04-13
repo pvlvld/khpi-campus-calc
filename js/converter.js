@@ -1,4 +1,4 @@
-import {CONVERSION_RATES} from "./consts.js";
+import {CONFIG, CONVERSION_RATES} from "./consts.js";
 
 export class Converter {
   constructor() {
@@ -41,10 +41,13 @@ export class Converter {
       if (typeof e.target?.value !== "string") return;
       let currentValue = e.target.value || "0";
 
-      if (currentValue.length > 15) {
-        e.target.value = currentValue.slice(0, 15);
-        return
-      };
+      if (currentValue.length > CONFIG.limits.maxConverterInputLength) {
+        e.target.value = currentValue.slice(
+          0,
+          CONFIG.limits.maxConverterInputLength
+        );
+        return;
+      }
 
       if (!/^-?\d*\.?\d*$/.test(currentValue)) {
         return void (e.target.value = this.ui.convertFrom.innerText);
