@@ -103,6 +103,7 @@ export class App {
 
   toggleMobileButtons() {
     const container = document.getElementById("mobile-only-buttons");
+    if (!container) return;
     if (this.activeTab === "Calculator") {
       container.innerHTML = `
           <button id="open-journal">History / Memory</button>
