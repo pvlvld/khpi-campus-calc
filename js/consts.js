@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 const FUNCTIONS = ["√", "^", "!", "%", "/", "*"];
 const REPLACEMENTS = {",": ".", s: "√"};
