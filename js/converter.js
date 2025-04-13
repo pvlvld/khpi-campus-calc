@@ -1,4 +1,4 @@
-import { CONVERSION_RATES } from "./consts.js";
+import {CONVERSION_RATES} from "./consts.js";
 
 export class Converter {
   constructor() {
@@ -37,6 +37,8 @@ export class Converter {
     });
 
     this.ui.input.addEventListener("input", (e) => {
+      if (!e.target || !("value" in e.target)) return;
+      if (typeof e.target?.value !== "string") return;
       let currentValue = e.target.value || "0";
 
       if (!/^-?\d*\.?\d*$/.test(currentValue)) {
@@ -49,10 +51,11 @@ export class Converter {
         if (/^-?0\d+/.test(currentValue)) {
           let cleanValue = currentValue.replace(/^-?0+/, "") || "0";
           e.target.value = currentValue.startsWith("-")
-            ? -Math.abs(cleanValue)
-            : Math.abs(cleanValue);
+            ? -Math.abs(+cleanValue)
+            : Math.abs(+cleanValue);
         }
 
+        //@ts-expect-error
         this.ui.convertFrom.innerText = e.target.value;
       }
 
@@ -60,7 +63,9 @@ export class Converter {
     });
 
     const modes = document.getElementById("conversion-modes");
-
+    if (!modes) {
+      throw new Error("Conversion modes element not found");
+    }
     Object.keys(this.conversionRates).forEach((key) => {
       const button = document.createElement("div");
       button.innerText = key;
@@ -68,8 +73,10 @@ export class Converter {
     });
 
     function updateSelectedModeStyle() {
+      //@ts-expect-error
       Array.from(modes.children).forEach((btn) => {
         btn.classList.remove("active");
+        //@ts-expect-error
         if (btn.innerText === this.layout) {
           btn.classList.add("active");
         }
@@ -81,6 +88,7 @@ export class Converter {
         this.ui.input.value = "";
         this.ui.convertFrom.innerText = "0";
         this.ui.convertTo.innerText = "0";
+        //@ts-expect-error
         this.switchLayout(e.target.innerText);
         updateSelectedModeStyle.bind(this)();
       });
