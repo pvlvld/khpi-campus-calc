@@ -838,10 +838,8 @@ class Converter {
 
     this.ui.input.addEventListener("input", (e) => {
       let currentValue = e.target.value || "0";
-      const isNegative = currentValue.startsWith("-");
 
-      const isValidNumber = /^-?\d*\.?\d*$/.test(currentValue);
-      if (!isValidNumber) {
+      if (!/^-?\d*\.?\d*$/.test(currentValue)) {
         return void (e.target.value = this.ui.convertFrom.innerText);
       }
 
@@ -850,7 +848,7 @@ class Converter {
       } else {
         if (/^-?0\d+/.test(currentValue)) {
           let cleanValue = currentValue.replace(/^-?0+/, "") || "0";
-          e.target.value = isNegative
+          e.target.value = currentValue.startsWith("-")
             ? -Math.abs(cleanValue)
             : Math.abs(cleanValue);
         }
