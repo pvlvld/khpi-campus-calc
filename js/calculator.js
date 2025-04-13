@@ -1,4 +1,4 @@
-import { DEBUG, REPLACEMENTS, VALID_EXPRESSION_REGEX } from "./consts.js";
+import {DEBUG, REPLACEMENTS, VALID_EXPRESSION_REGEX} from "./consts.js";
 import {MathExpressionParser} from "./mathHandler.js";
 
 export class Calculator {
