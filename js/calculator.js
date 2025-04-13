@@ -141,6 +141,14 @@ export class Calculator {
     for (const [k, v] of Object.entries(REPLACEMENTS)) {
       value = value.replace(new RegExp(`^${k}$`, "i"), v);
     }
+
+    const isDelAction = ["Delete", "Backspace", "←"].includes(value);
+    if (!isDelAction && this.currentInput.length >= 120) {
+      this.currentInput = this.currentInput.slice(0, 120);
+      this.ui.display.resultInput.innerHTML = this.currentInput;
+      return;
+    }
+
     switch (true) {
       case value === "=":
         try {

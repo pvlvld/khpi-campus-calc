@@ -84,6 +84,10 @@ body {
     & select {
       font-size: 1.5rem;
     }
+    & div {
+      max-width: 30vw;
+      overflow: auto;
+    }
   }
 }
 
@@ -134,6 +138,8 @@ select option {
 
 #display #display-input-result {
   font-weight: bold;
+  margin-left: 3rem;
+  overflow-x: auto;
 }
 
 #memory-buttons {
